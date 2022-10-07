@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
 class Voos(models.Model):
     STATUS_CHOICES = (
         ('embarcando', 'embarcando'), 
@@ -20,8 +20,8 @@ class Voos(models.Model):
     destino = models.CharField(max_length=100, blank=False)
     partida_prevista = models.DateTimeField(blank=False)
     chegada_prevista = models.DateTimeField(blank=False)
-    partida_real = models.DateTimeField()
-    chegada_real = models.DateTimeField()
+    partida_real = models.DateTimeField(blank=True, null=True)
+    chegada_real = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = 'voos'
@@ -42,7 +42,7 @@ class Partidas(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     destino = models.CharField(max_length=100, blank=False)
     partida_prevista = models.DateTimeField(blank=False)
-    partida_real = models.DateTimeField()
+    partida_real = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = 'partidas'
@@ -51,7 +51,7 @@ class Partidas(models.Model):
 class Chegadas(models.Model):
     origem = models.CharField(max_length=100, blank=False)
     chegada_prevista = models.DateTimeField(blank=False)
-    chegada_real = models.DateTimeField()
+    chegada_real = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = 'chegadas'
