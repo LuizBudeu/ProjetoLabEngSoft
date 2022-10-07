@@ -11,6 +11,12 @@ Grupo 3:
 - Luiz Guilherme Budeu    (11821639)
 
 
+## Organização básica do projeto
+
+
+O projeto web consta dentro da pasta ```projeto``` do repositório. Ele consiste em três partes principais: a pasta ```projeto```, que contém as configurações globais do projeto (como o arquivo ```settings.py```), a pasta ```monitoramento```, que contém as configurações específicas da aplicação do sistema de monitoramento de voos (como os models e views), e a pasta ```template```, que contém os arquivos HTML das páginas web.
+
+
 ## Roteiro de Execução do Projeto:
 1. Criar pasta nova no computador (nome sugerido: "ProjetoLabEngSoft")
 
@@ -19,12 +25,12 @@ Grupo 3:
 ```
 git clone https://github.com/LuizBudeu/ProjetoLabEngSoft.git
 ```
-Esse comando instala o ambiente virtual Python dentro da pasta criada.
 
 
-3. Entre na pasta ```projeto``` com o seguinte comando:
+3. Entre na pasta ```projeto``` e crie o ambiente virtual Python com os seguintes comandos:
 ```
 cd projeto
+python3 -m venv env
 ```
 
 
@@ -44,7 +50,22 @@ python manage.py runserver
 6. Acesse o endereço ```localhost:8000/FIRST``` em seu navegador de preferência para visualizar a página. 
 
 
-## Organização básica do projeto
+## Roteiro de Execução de Testes (CRUD)
+1. Seguir o passo-a-passo anterior (passo 1 até o passo 4) para clonar o repositório, criar e ativar o ambiente virtual.
+
+2. Baixar as dependências do projeto com o comando:
+```
+pip install -r requirements.txt
+```
+
+3. Aplicar as migrações (criar banco de dados):
+```
+python manage.py migrate
+```
+
+4. Executar os testes:
+```
+python manage.py test
+```
 
 
-O projeto web consta dentro da pasta ```projeto``` do repositório. Ele consiste em três partes principais: a pasta ```projeto```, que contém as configurações globais do projeto (como o arquivo ```settings.py```), a pasta ```monitoramento```, que contém as configurações específicas da aplicação do sistema de monitoramento de voos (como os models e views), e a pasta ```template```, que contém os arquivos HTML das páginas web.
