@@ -72,3 +72,7 @@ def relatorio(request):
 def estado(request):
     context = {}
     return render(request, 'estado.html', context)
+
+def mostrarelatorio(request):
+    context = {}
+    return render(request, 'mostrarelatorio.html', context)
