@@ -54,21 +54,15 @@ python manage.py runserver
 
 ## Roteiro de Execução de Testes (CRUD)
 
-1. Seguir o passo-a-passo anterior (passo 1 até o passo 4) para clonar o repositório, criar e ativar o ambiente virtual.
+1. Seguir o passo-a-passo anterior (passo 1 até o passo 5) para clonar o repositório, criar e ativar o ambiente virtual e baixar as dependências.
 
-2. Baixar as dependências do projeto com o comando:
-
-```
-pip install -r requirements.txt
-```
-
-3. Aplicar as migrações (criar banco de dados):
+2. Aplicar as migrações (criar banco de dados):
 
 ```
 python manage.py migrate
 ```
 
-4. Executar os testes:
+3. Executar os testes:
 
 ```
 python manage.py test
