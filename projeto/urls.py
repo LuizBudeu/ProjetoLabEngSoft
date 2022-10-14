@@ -26,5 +26,6 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('crud/', views.crud, name='crud'),
     path('monitoramento/', views.monitoramento, name='monitoramento'),
-    path('relatorio/', views.relatorio, name='relatorio')
+    path('relatorio/', views.relatorio, name='relatorio'),
+    path('monitoramento/estado/',  views.estado, name='estado')
 ]
