@@ -38,13 +38,19 @@ python3 -m venv env
 
 Caso haja algum erro no processo de rodar o comando, tal como o computador não conseguir achar o path para o arquivo Activate.ps1, você pode encontrá-lo manualmente na pasta 'bin' do repositório e copiar seu path absoluto. Feito isso, é possível colar diretamente o path para o terminal para ativar o ambiente.
 
-5. Com o ambiente ativo, para começar o webserver, rodar o comando:
+5. Baixar as dependências do projeto com o comando:
+
+```
+pip install -r requirements.txt
+```
+
+6. Com o ambiente ativo, para começar o webserver, rodar o comando:
 
 ```
 python manage.py runserver
 ```
 
-6. Acesse o endereço `localhost:8000/FIRST` em seu navegador de preferência para visualizar a página.
+7. Acesse o endereço `localhost:8000/FIRST` em seu navegador de preferência para visualizar a página.
 
 ## Roteiro de Execução de Testes (CRUD)
 
