@@ -19,8 +19,10 @@ def login(request):
     if request.method == 'POST':
         print(request.POST.keys())
         print(request.POST['username'])
-        if request.POST['username'] == 'luiz':
-            return redirect('first')
+        username = request.POST['username']
+        password = request.POST['password']
+        if username in logins and password == logins[username]['password']:
+            return redirect('home')
 
     context = {}
 
