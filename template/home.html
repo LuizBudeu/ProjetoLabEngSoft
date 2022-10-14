@@ -24,11 +24,10 @@
 
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#"
+            <a class="nav-link" href="{% url 'home' %}"
               >Home <span class="sr-only">(current)</span></a
             >
           </li>
@@ -63,7 +62,7 @@
               Verificar e atualizar os estados dos voos no Sistema.
             </p>
             <p>
-              <a class="btn btn-primary" href="#" role="button"
+              <a class="btn btn-primary" href="{% url 'monitoramento' %}" role="button"
                 >Monitoramento de Voos &raquo;</a
               >
             </p>
@@ -74,7 +73,7 @@
               Ver relatórios gerados para algum período de tempo especificado, ou para o dia atual.
             </p>
             <p>
-              <a class="btn btn-primary" href="#" role="button"
+              <a class="btn btn-primary" href="{% url 'relatorio' %}" role="button"
                 >Geração de Relatórios &raquo;</a
               >
             </p>
