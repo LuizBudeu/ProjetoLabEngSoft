@@ -68,3 +68,7 @@ def monitoramento(request):
 def relatorio(request):
     context = {}
     return render(request, 'relatorio.html', context)
+
+def estado(request):
+    context = {}
+    return render(request, 'estado.html', context)
