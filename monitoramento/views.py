@@ -4,15 +4,23 @@ def first(request):
     return render(request, 'FIRST.html')
 
 def login(request):
+    context = {}
     logins = {
         'felipe' : {
             'password': 'felipe',
+            'permission': 'relatorio'
         },
         'gabriel' : {
             'password': 'gabriel',
+            'permission': 'monitoramento'
         },
         'luiz' : {
             'password': 'luiz',
+            'permission': 'crud'
+        },
+        'admin': {
+            'password': 'admin',
+            'permission': 'all'
         }
     }
 
@@ -21,8 +29,8 @@ def login(request):
         password = request.POST['password']
         if username in logins and password == logins[username]['password']:
             return redirect('home')
-
-    context = {}
+        else:
+            context['error_msg'] = 'Usuário ou senha errados.'
 
     return render(request, 'login.html', context)
 
