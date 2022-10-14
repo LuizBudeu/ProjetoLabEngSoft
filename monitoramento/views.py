@@ -30,3 +30,18 @@ def login(request):
 def home(request):
     context = {}
     return render(request, 'home.html', context)
+
+
+def crud(request):
+    context = {}
+    return render(request, 'crud.html', context)
+
+
+def monitoramento(request):
+    context = {}
+    return render(request, 'monitoramento.html', context)
+
+
+def relatorio(request):
+    context = {}
+    return render(request, 'relatorio.html', context)
