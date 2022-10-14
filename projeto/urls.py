@@ -25,6 +25,10 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('home/', views.home, name='home'),
     path('crud/', views.crud, name='crud'),
+    path('crud/create/', views.crudcreate, name='crudcreate'),
+    path('crud/read/', views.crudread, name='crudread'),
+    path('crud/update/', views.crudupdate, name='crudupdate'),
+    path('crud/delete/', views.cruddelete, name='cruddelete'),
     path('monitoramento/', views.monitoramento, name='monitoramento'),
     path('relatorio/', views.relatorio, name='relatorio')
 ]

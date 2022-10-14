@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Controlar dados de voos</title>
     <link rel="stylesheet" href="{% static 'projeto/home.css'%}" />
   </head>
   <body>
@@ -22,7 +22,14 @@
         </ul>
       </div>
     </nav>
+    
+        Página do CRUD
 
-    Página do CRUD
+    <div>
+      <a class="btn btn-primary" href="{% url 'crud-create' %}" role="button"> Criar um voo &raquo; </a>
+      <a class="btn btn-primary" href="{% url 'crud-update' %}" role="button"> Atualizar um voo &raquo; </a>
+      <a class="btn btn-primary" href="{% url 'crud-delete' %}" role="button"> Deletar um voo &raquo; </a>
+      <a class="btn btn-primary" href="{% url 'crud-read' %}" role="button"> Verificar dados de um voo &raquo; </a>
+    </div>
   </body>
 </html>

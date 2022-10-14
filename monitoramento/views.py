@@ -44,6 +44,21 @@ def crud(request):
     context = {}
     return render(request, 'crud.html', context)
 
+def crudcreate(request):
+    context = {}
+    return render(request, 'crud-create.html', context)
+
+def crudread(request):
+    context = {}
+    return render(request, 'crud-read.html', context)
+
+def crudupdate(request):
+    context = {}
+    return render(request, 'crud-update.html', context)
+
+def cruddelete(request):
+    context = {}
+    return render(request, 'crud-delete.html', context)
 
 def monitoramento(request):
     context = {}
