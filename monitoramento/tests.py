@@ -3,6 +3,8 @@ from monitoramento.models import Voos, Partidas, Chegadas
 from datetime import datetime, timedelta, timezone
 
 
+now = datetime.now().replace(tzinfo=timezone.utc)
+
 class VoosTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -11,8 +13,8 @@ class VoosTest(TestCase):
             'codigo': 'AA0000',
             'origem': 'Sao Paulo',
             'destino': 'Rio de Janeiro',
-            'partida_prevista': datetime.now().replace(tzinfo=timezone.utc),
-            'chegada_prevista': datetime.now().replace(tzinfo=timezone.utc) + timedelta(hours=1),
+            'partida_prevista': now,
+            'chegada_prevista': now + timedelta(hours=1),
         }
 
         Voos.objects.create(**voo)
@@ -38,8 +40,8 @@ class PartidasTest(TestCase):
         partida = {
             'status': 'programado',
             'destino': 'Rio de Janeiro',
-            'partida_prevista':datetime.now().replace(tzinfo=timezone.utc),
-            'partida_real': datetime.now().replace(tzinfo=timezone.utc) + timedelta(hours=1),
+            'partida_prevista': now,
+            'partida_real': now + timedelta(hours=1),
         }
 
         Partidas.objects.create(**partida)
@@ -64,8 +66,8 @@ class ChegadasTest(TestCase):
     def setUpTestData(cls):
         chegada = {
             'origem': 'Sao Paulo',
-            'chegada_prevista': datetime.now().replace(tzinfo=timezone.utc),
-            'chegada_real': datetime.now().replace(tzinfo=timezone.utc),
+            'chegada_prevista': now,
+            'chegada_real': now,
         }
 
         Chegadas.objects.create(**chegada)
@@ -76,9 +78,9 @@ class ChegadasTest(TestCase):
 
     def test_update_chegada_real(self):
         voo_1 = Chegadas.objects.get()
-        voo_1.chegada_real = datetime.now().replace(tzinfo=timezone.utc) + timedelta(hours=1)
+        voo_1.chegada_real = now + timedelta(hours=1)
         voo_1.save()
-        self.assertEqual(voo_1.chegada_real, datetime.now().replace(tzinfo=timezone.utc) + timedelta(hours=1))
+        self.assertEqual(voo_1.chegada_real, now + timedelta(hours=1))
 
     def test_delete(self):
         Chegadas.objects.filter(id=1).delete()
