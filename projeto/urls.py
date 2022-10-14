@@ -19,5 +19,6 @@ from monitoramento import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('FIRST/', views.first)
+    path('FIRST/', views.first),
+    path('login/', views.login)
 ]
