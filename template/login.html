@@ -19,6 +19,7 @@
   <body>
     <div class="sidenav">
       <div class="login-main-text">
+        <h1>PCS3643 - Laboratório de Engenharia de Software</h1>
         <h2>
           Monitoramento<br />
           Página de Login
@@ -32,21 +33,21 @@
           <form action="{% url 'login' %}" method="POST">
             <div class="form-group">
               {% csrf_token %}
-              <label for="username">User Name</label>
+              <label for="username">Nome de usuário</label>
               <input
                 name="username"
                 type="text"
                 class="form-control"
-                placeholder="User Name"
+                placeholder="Nome de usuário"
               />
             </div>
             <div class="form-group">
-              <label for="password">Password</label>
+              <label for="password">Senha</label>
               <input
                 name="password"
                 type="password"
                 class="form-control"
-                placeholder="Password"
+                placeholder="Senha"
               />
             </div>
             <button type="submit" class="btn btn-black">Login</button>
