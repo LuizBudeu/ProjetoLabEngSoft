@@ -24,7 +24,11 @@ urlpatterns = [
     path('FIRST/', views.first, name='first'),
     path('login/', views.login, name='login'),
     path('home/', views.home, name='home'),
+    path('home/<str:permission>', views.home, name='home'),
     path('crud/', views.crud, name='crud'),
+    path('crud/<str:permission>', views.crud, name='crud'),
     path('monitoramento/', views.monitoramento, name='monitoramento'),
-    path('relatorio/', views.relatorio, name='relatorio')
+    path('monitoramento/<str:permission>', views.monitoramento, name='monitoramento'),
+    path('relatorio/', views.relatorio, name='relatorio'),
+    path('relatorio/<str:permission>', views.relatorio, name='relatorio'),
 ]
