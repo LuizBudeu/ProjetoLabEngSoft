@@ -28,7 +28,7 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         if username in logins and password == logins[username]['password']:
-            return redirect(f"home/{logins[username]['permission']}")
+            return redirect(f"home")
         else:
             context['error_msg'] = 'Usuário ou senha errados.'
 
