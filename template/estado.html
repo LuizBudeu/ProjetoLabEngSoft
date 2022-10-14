@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gerar relatórios</title>
+    <title>Atualização de estado</title>
     <link rel="stylesheet" href="{% static 'projeto/home.css'%}" />
   </head>
   <body>
@@ -15,18 +15,18 @@
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'home' %}"
-              >Home <span class="sr-only">(current)</span></a
+            <a class="nav-link"
+              >&#8203; <span class="sr-only">(current)</span></a
             >
           </li>
         </ul>
       </div>
     </nav>
 
-    Página do Relatório
+    Atualização de estado
 
     <div>
-      <a class="btn btn-primary" href="{% url 'mostrarelatorio' %}" role="button"> Gerar Relatório &raquo; </a>
+      <a class="btn btn-primary" href="{% url 'monitoramento' %}" role="button"> Atualizar Estado &raquo; </a>
     </div>
   </body>
 </html>

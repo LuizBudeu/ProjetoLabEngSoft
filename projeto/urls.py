@@ -26,9 +26,12 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('home/<str:permission>', views.home, name='home'),
     path('crud/', views.crud, name='crud'),
-    path('crud/<str:permission>', views.crud, name='crud'),
+    path('crud/create/', views.crudcreate, name='crudcreate'),
+    path('crud/read/', views.crudread, name='crudread'),
+    path('crud/update/', views.crudupdate, name='crudupdate'),
+    path('crud/delete/', views.cruddelete, name='cruddelete'),
     path('monitoramento/', views.monitoramento, name='monitoramento'),
-    path('monitoramento/<str:permission>', views.monitoramento, name='monitoramento'),
     path('relatorio/', views.relatorio, name='relatorio'),
-    path('relatorio/<str:permission>', views.relatorio, name='relatorio'),
+    path('monitoramento/estado/',  views.estado, name='estado'),
+    path('relatorio/mostra/',  views.mostrarelatorio, name='mostrarelatorio')
 ]

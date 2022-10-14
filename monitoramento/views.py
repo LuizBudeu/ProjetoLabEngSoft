@@ -44,12 +44,35 @@ def crud(request, permission='all'):
     context = {'permission': permission}
     return render(request, 'crud.html', context)
 
+def crudcreate(request):
+    context = {}
+    return render(request, 'crud-create.html', context)
 
-def monitoramento(request, permission='all'):
-    context = {'permission': permission}
+def crudread(request):
+    context = {}
+    return render(request, 'crud-read.html', context)
+
+def crudupdate(request):
+    context = {}
+    return render(request, 'crud-update.html', context)
+
+def cruddelete(request):
+    context = {}
+    return render(request, 'crud-delete.html', context)
+
+def monitoramento(request):
+    context = {}
     return render(request, 'monitoramento.html', context)
 
 
-def relatorio(request, permission='all'):
-    context = {'permission': permission}
+def relatorio(request):
+    context = {}
     return render(request, 'relatorio.html', context)
+
+def estado(request):
+    context = {}
+    return render(request, 'estado.html', context)
+
+def mostrarelatorio(request):
+    context = {}
+    return render(request, 'mostrarelatorio.html', context)
