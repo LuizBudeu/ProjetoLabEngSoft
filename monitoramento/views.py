@@ -17,8 +17,6 @@ def login(request):
     }
 
     if request.method == 'POST':
-        print(request.POST.keys())
-        print(request.POST['username'])
         username = request.POST['username']
         password = request.POST['password']
         if username in logins and password == logins[username]['password']:
