@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Monitoramento de voos</title>
+    <title>Criar um voo</title>
     <link rel="stylesheet" href="{% static 'projeto/home.css'%}" />
   </head>
   <body>
@@ -15,16 +15,18 @@
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'home' %}"
-              >Home <span class="sr-only">(current)</span></a
+            <a class="nav-link"
+              ><span class="sr-only">(current)</span> &#8203; </a
             >
           </li>
         </ul>
       </div>
     </nav>
+    
+        Criar um Voo
 
-    <a class="btn btn-primary" href="{% url 'estado' %}" role="button"
-                >Mudar Estado do voo &raquo;</a
-              >
+    <div>
+      <a class="btn btn-primary" href="{% url 'crud' %}" role="button"> Confirmar &raquo; </a>
+    </div>
   </body>
 </html>
