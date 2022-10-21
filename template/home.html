@@ -1,4 +1,4 @@
-{% load static%}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -59,25 +59,29 @@
               dados.
             </p>
             <p>
-              <a
-                class="btn btn-primary"
-                href="{% url 'crud' %}"
-                role="button"
-                disable
+              {% if permission == 'all' or permission == 'crud' %}
+              <a class="btn btn-primary" href="{% url 'crud' %}" role="button"
                 >Controle de Dados de Voos &raquo;</a
               >
+              {% else %} 
+              <h6 style="color:rgb(255, 56, 56);">Você não tem permissão para acessar essa página.</h6>
+              {% endif %}
             </p>
           </div>
           <div class="col-md-4">
             <h2>Monitoramento de Voos</h2>
             <p>Verificar e atualizar os estados dos voos no Sistema.</p>
             <p>
+              {% if permission == 'all' or permission == 'monitoramento' %}
               <a
                 class="btn btn-primary"
                 href="{% url 'monitoramento' %}"
                 role="button"
                 >Monitoramento de Voos &raquo;</a
               >
+              {% else %} 
+              <h6 style="color:rgb(255, 56, 56);">Você não tem permissão para acessar essa página.</h6>
+              {% endif %}
             </p>
           </div>
           <div class="col-md-4">
@@ -87,12 +91,16 @@
               ou para o dia atual.
             </p>
             <p>
+              {% if permission == 'all' or permission == 'relatorio' %}
               <a
                 class="btn btn-primary"
                 href="{% url 'relatorio' %}"
                 role="button"
                 >Geração de Relatórios &raquo;</a
               >
+              {% else %} 
+                <h6 style="color:rgb(255, 56, 56);">Você não tem permissão para acessar essa página.</h6>
+              {% endif %}
             </p>
           </div>
         </div>
