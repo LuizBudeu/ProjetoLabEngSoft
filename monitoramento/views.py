@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
 from .filters import VooFilter
@@ -83,6 +84,12 @@ def monitoramento(request):
 
 def relatorio(request):
     context = {}
+
+    if request.method == "POST":
+        initial_date = request.POST["data-inicio"]
+        end_date = request.POST["data-fim"]
+        voos = Voos.objects.all()
+        voos_filter = VooFilter(request.GET, voos)
     return render(request, 'relatorio.html', context)
 
 
