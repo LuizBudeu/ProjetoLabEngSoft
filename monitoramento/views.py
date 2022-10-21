@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
 from .filters import VooFilter
@@ -45,12 +46,42 @@ def home(request):
 
 
 def crud(request):
+    now = datetime.now().replace(tzinfo=timezone.utc)
+    voo = {
+        'companhia_aerea': 'Azul',
+        'codigo': 'XX1111',
+        'origem': 'São Paulo',
+        'destino': 'Rio de Janeiro',
+        'partida_prevista': now,
+        'chegada_prevista': now,
+    }
+    print(request.POST)
+    
+    Voos.objects.create(**voo)
+
     context = {}
     return render(request, 'crud.html', context)
 
 
-def crudcreate(request):
-    context = {}
+def crudcreate(request):  #TODO
+    obj = None
+    created = None
+
+    if request.method == 'POST':
+        voo = {
+            'companhia': request.POST['companhia'],
+            'codigo': request.POST['codigo'],
+            'origem': request.POST['origem'],
+            'destino': request.POST['destino'],
+            'partida_prevista': request.POST['partida_prevista'],
+            'chegada_prevista': request.POST['chegada_prevista'],
+        }
+        print(request.POST)
+        
+        obj, created = Voos.objects.create(**voo)
+
+
+    context = {'obj': obj, 'created': created}
     return render(request, 'crud-create.html', context)
 
 

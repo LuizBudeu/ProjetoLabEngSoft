@@ -10,23 +10,74 @@
     <link rel="stylesheet" href="{% static 'projeto/home.css'%}" />
   </head>
   <body>
-
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link"
-              ><span class="sr-only">(current)</span> &#8203; </a
-            >
+              ><span class="sr-only">(current)</span> &#8203;
+            </a>
           </li>
         </ul>
       </div>
     </nav>
-    
-        <h1>Criar um Voo</h1>
+
+    <h1 style="text-align: center">Criar um Voo</h1>
+
+    <form method="POST">
+      <div class="form-group col-md-3">
+        {% csrf_token %}
+        <label for="companhia">Companhia Aérea</label>
+        <input
+          name="companhia"
+          type="text"
+          class="form-control"
+          placeholder="Companhia Aérea"
+        />
+        <label for="codigo">Código</label>
+        <input
+          name="codigo"
+          type="text"
+          class="form-control"
+          placeholder="Código"
+        />
+        <label for="origem">Origem</label>
+        <input
+          name="origem"
+          type="text"
+          class="form-control"
+          placeholder="Origem"
+        />
+        <label for="destino">Destino</label>
+        <input
+          name="destino"
+          type="text"
+          class="form-control"
+          placeholder="Destino"
+        />
+        <label for="partida_prevista">Partida prevista</label>
+        <input
+          name="partida_prevista"
+          type="text"
+          class="form-control"
+          placeholder="Partida prevista"
+        />
+        <label for="chegada_prevista">Chegada prevista</label>
+        <input
+          name="chegada_prevista"
+          type="text"
+          class="form-control"
+          placeholder="Chegada prevista"
+        />
+      </div>
+
+      <input type="button" class="btn btn-primary" />
+    </form>
 
     <div>
-      <a class="btn btn-primary" href="{% url 'crud' %}" role="button"> Confirmar &raquo; </a>
+      <a class="btn btn-primary" href="{% url 'crud' %}" role="button">
+        Confirmar &raquo;
+      </a>
     </div>
   </body>
 </html>

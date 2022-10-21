@@ -30,6 +30,8 @@
         <input type="submit" />
       </form>
 
+      voos: {% for voo in voo_qs %} voo {% endfor %}
+
       <br />
       <a class="btn btn-primary" href="{% url 'crud' %}" role="button">
         Confirmar &raquo;
