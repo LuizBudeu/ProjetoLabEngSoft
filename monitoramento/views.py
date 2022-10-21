@@ -78,7 +78,13 @@ def cruddelete(request):
 
 
 def monitoramento(request):
-    context = {}
+    voos_qs = Voos.objects.all()
+    voos_filter = VooFilter(request.GET, queryset=voos_qs)
+    voos_qs = voos_filter.qs
+    context = {
+        'voos_filter': voos_filter,
+         'voos_qs': voos_qs,
+    }
     return render(request, 'monitoramento.html', context)
 
 
@@ -94,7 +100,9 @@ def relatorio(request):
 
 
 def estado(request):
+    
     context = {}
+    
     return render(request, 'estado.html', context)
 
 
