@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from .models import Voos, Partidas, Chegadas
 
 def first(request):
     return render(request, 'FIRST.html')
@@ -42,7 +43,7 @@ def home(request):
 
 
 def crud(request):
-    context = {'permission': request.session.get('permission')}
+    context = {}
     return render(request, 'crud.html', context)
 
 
