@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
+from .filters import VooFilter
+
 
 def first(request):
     return render(request, 'FIRST.html')
@@ -53,7 +55,14 @@ def crudcreate(request):
 
 
 def crudread(request):
-    context = {}
+    voos_qs = Voos.objects.all()
+    voos_filter = VooFilter(request.GET, queryset=voos_qs)
+    voos_qs = voos_filter.qs
+
+    context = {
+        'voos_filter': voos_filter,
+        'voos_qs': voos_qs,
+    }
     return render(request, 'crud-read.html', context)
 
 
