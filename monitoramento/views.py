@@ -1,7 +1,7 @@
-from datetime import datetime, timezone
+import datetime
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
-from .filters import VooFilter
+from .filters import VoosFilter
 
 
 def first(request):
@@ -46,49 +46,58 @@ def home(request):
 
 
 def crud(request):
-    now = datetime.now().replace(tzinfo=timezone.utc)
-    voo = {
-        'companhia_aerea': 'Azul',
-        'codigo': 'XX1111',
-        'origem': 'São Paulo',
-        'destino': 'Rio de Janeiro',
-        'partida_prevista': now,
-        'chegada_prevista': now,
-    }
-    print(request.POST)
+    # now = datetime.now().replace(tzinfo=timezone.utc)
+    # voo = {
+    #     'companhia_aerea': 'Azul',
+    #     'codigo': 'XX1111',
+    #     'origem': 'São Paulo',
+    #     'destino': 'Rio de Janeiro',
+    #     'partida_prevista': now,
+    #     'chegada_prevista': now,
+    # }
+    # print(request.POST)
     
-    Voos.objects.create(**voo)
+    # Voos.objects.create(**voo)
 
     context = {}
     return render(request, 'crud.html', context)
 
 
-def crudcreate(request):  #TODO
+def crudcreate(request):  
     obj = None
-    created = None
-
+    created = False
+    
     if request.method == 'POST':
+        created = False
+        chegada_prevista = datetime.datetime.strptime(request.POST['chegada_prevista'], '%Y-%m-%d %H:%M:%S')
+        partida_prevista = datetime.datetime.strptime(request.POST['partida_prevista'], '%Y-%m-%d %H:%M:%S') # TODO pegar de jeito certo, com calendar widget
+        
+        # TODO parsear codigo
+        
         voo = {
-            'companhia': request.POST['companhia'],
+            'companhia_aerea': request.POST['companhia'],
             'codigo': request.POST['codigo'],
             'origem': request.POST['origem'],
             'destino': request.POST['destino'],
-            'partida_prevista': request.POST['partida_prevista'],
-            'chegada_prevista': request.POST['chegada_prevista'],
+            'partida_prevista': partida_prevista,
+            'chegada_prevista': chegada_prevista,
         }
         print(request.POST)
         
-        obj, created = Voos.objects.create(**voo)
+        obj = Voos.objects.create(**voo)
 
-
-    context = {'obj': obj, 'created': created}
+    context = {
+        'obj': '' if obj is None and not created else obj,
+    }
     return render(request, 'crud-create.html', context)
 
 
 def crudread(request):
     voos_qs = Voos.objects.all()
-    voos_filter = VooFilter(request.GET, queryset=voos_qs)
+    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
+    
+    print(voos_qs)
 
     context = {
         'voos_filter': voos_filter,
@@ -109,7 +118,7 @@ def cruddelete(request):
 
 def monitoramento(request):
     voos_qs = Voos.objects.all()
-    voos_filter = VooFilter(request.GET, queryset=voos_qs)
+    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     context = {
         'voos_filter': voos_filter,
@@ -125,7 +134,7 @@ def relatorio(request):
         initial_date = request.POST["data-inicio"]
         end_date = request.POST["data-fim"]
         voos = Voos.objects.all()
-        voos_filter = VooFilter(request.GET, voos)
+        voos_filter = VoosFilter(request.GET, voos)
     return render(request, 'relatorio.html', context)
 
 

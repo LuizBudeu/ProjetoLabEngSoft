@@ -24,7 +24,7 @@
 
     <h1 style="text-align: center">Criar um Voo</h1>
 
-    <form method="POST">
+    <form action="{% url 'crudcreate' %}" method="POST">
       <div class="form-group col-md-3">
         {% csrf_token %}
         <label for="companhia">Companhia Aérea</label>
@@ -71,8 +71,10 @@
         />
       </div>
 
-      <input type="button" class="btn btn-primary" />
+      <button type="submit" class="btn btn-primary">Criar</button>
     </form>
+
+    {{obj}} 
 
     <div>
       <a class="btn btn-primary" href="{% url 'crud' %}" role="button">
