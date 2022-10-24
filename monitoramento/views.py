@@ -46,19 +46,6 @@ def home(request):
 
 
 def crud(request):
-    # now = datetime.now().replace(tzinfo=timezone.utc)
-    # voo = {
-    #     'companhia_aerea': 'Azul',
-    #     'codigo': 'XX1111',
-    #     'origem': 'São Paulo',
-    #     'destino': 'Rio de Janeiro',
-    #     'partida_prevista': now,
-    #     'chegada_prevista': now,
-    # }
-    # print(request.POST)
-    
-    # Voos.objects.create(**voo)
-
     context = {}
     return render(request, 'crud.html', context)
 
@@ -82,7 +69,6 @@ def crudcreate(request):
             'partida_prevista': partida_prevista,
             'chegada_prevista': chegada_prevista,
         }
-        print(request.POST)
         
         obj = Voos.objects.create(**voo)
 
@@ -96,8 +82,6 @@ def crudread(request):
     voos_qs = Voos.objects.all()
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
-    
-    print(voos_qs)
 
     context = {
         'voos_filter': voos_filter,
@@ -112,7 +96,17 @@ def crudupdate(request):
 
 
 def cruddelete(request):
-    context = {}
+    voos_qs = Voos.objects.all()
+    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
+    voos_qs = voos_filter.qs
+    
+    if request.method =='GET': # TODO decidir jeito de pegar voo
+        codigo = request.GET.get('codigo')
+    
+    context = {
+        'voos_filter': voos_filter,
+        'voos_qs': voos_qs,
+    }
     return render(request, 'crud-delete.html', context)
 
 

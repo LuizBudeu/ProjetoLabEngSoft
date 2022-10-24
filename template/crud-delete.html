@@ -23,7 +23,12 @@
       </div>
     </nav>
     
-        <h1>Deletar um Voo</h1>
+        <h1 style="text-align: center">Deletar um Voo</h1>
+
+        <form method="get">
+          {{ voos_filter.form.as_p }}
+          <input type="submit" />
+        </form>
 
     <div>
       <a class="btn btn-primary" href="{% url 'crud' %}" role="button"> Confirmar &raquo; </a>
