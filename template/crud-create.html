@@ -74,7 +74,9 @@
       <button type="submit" class="btn btn-primary">Criar</button>
     </form>
 
-    {{obj}} 
+    {% if obj %}
+      <p style="color:green">Voo criado com sucesso</p>
+    {% endif %} 
 
     <div>
       <a class="btn btn-primary" href="{% url 'crud' %}" role="button">

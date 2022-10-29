@@ -100,12 +100,15 @@ def cruddelete(request):
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     
-    if request.method =='GET': # TODO decidir jeito de pegar voo
-        codigo = request.GET.get('codigo')
+    if request.method =='GET': 
+        codigo = request.GET.get('codigo')  # TODO codigo unico?
+        obj = Voos.objects.filter(codigo=codigo).delete()  # TODO tela de confirmação de delete
     
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
+        'codigo': codigo,
+        'obj': obj,
     }
     return render(request, 'crud-delete.html', context)
 

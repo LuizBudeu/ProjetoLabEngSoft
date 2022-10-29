@@ -30,6 +30,12 @@
           <input type="submit" />
         </form>
 
+    <br>
+
+    {% if obj.1 %}
+        <p style="color: green">Voo com código {{codigo}} deletado com sucesso</p>
+    {% endif %}
+
     <div>
       <a class="btn btn-primary" href="{% url 'crud' %}" role="button"> Confirmar &raquo; </a>
     </div>
