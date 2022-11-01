@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
 from .filters import VoosFilter
@@ -126,12 +126,6 @@ def monitoramento(request):
 
 def relatorio(request):
     context = {}
-
-    if request.method == "POST":
-        initial_date = request.POST["data-inicio"]
-        end_date = request.POST["data-fim"]
-        voos = Voos.objects.all()
-        voos_filter = VoosFilter(request.GET, voos)
     return render(request, 'relatorio.html', context)
 
 
@@ -143,5 +137,17 @@ def estado(request):
 
 
 def mostrarelatorio(request):
-    context = {}
+    if request.method == "POST":  # Relatório de período específico
+        initial_date = request.POST["data-inicio"]
+        end_date = request.POST["data-fim"]
+    elif request.method == "GET":  # Relatório do dia
+        initial_date = datetime.now().date()
+        end_date = initial_date + timedelta(days=1)
+    
+    voos_filter = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
+    voos_qs = Voos.objects.all()
+    context = {
+        'voos_filter': voos_filter,
+        'voos_qs': voos_qs,
+    }
     return render(request, 'mostrarelatorio.html', context)

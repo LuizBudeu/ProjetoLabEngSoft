@@ -27,7 +27,7 @@
       <h2>Relatório de período específico</h2>
     </div>
     <div class="col-md-4">
-    <form action="{% url 'relatorioespecifico' %}" method="POST">
+    <form action="{% url 'mostrarelatorio' %}" method="POST">
         <div class="form-group">
           {% csrf_token %}
           <label for="data-inicio">Data de início</label>
@@ -45,14 +45,16 @@
             class="form-control"
           />
         </div>
+        <a class="btn btn-primary" href="{% url 'mostrarelatorio' %}" role="button"> Gerar Relatório &raquo; </a>
       </form>
-      <a class="btn btn-primary" href="{% url 'mostrarelatorio' %}" role="button"> Gerar Relatório &raquo; </a>
     </div>
 
     <br/>
     <div class="col-md-6">
       <h2>Relatório do dia</h2>
-      <a class="btn btn-primary" href="{% url 'mostrarelatorio' %}" role="button"> Gerar Relatório &raquo; </a>
+      <form action="{% url 'mostrarelatorio' %}" method="GET">
+        <a class="btn btn-primary" href="{% url 'mostrarelatorio' %}" role="button"> Gerar Relatório &raquo; </a>
+      </form>
     </div>
 
   </body>
