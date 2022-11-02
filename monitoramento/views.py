@@ -126,7 +126,22 @@ def monitoramento(request):
 
 def relatorio(request):
     context = {}
-    return render(request, 'relatorio.html', context)
+    if request.method == "GET":
+        return render(request, 'relatorio.html', context)
+
+    if request.method == "POST":  # Relatório de período específico
+        initial_date = request.POST["data-inicio"]
+        end_date = request.POST["data-fim"]
+        request.session["initial-date"] = initial_date
+        request.session["end-date"] = end_date
+
+    elif request.method == "PATCH":  # Relatório do dia
+        initial_date = datetime.now().date()
+        end_date = initial_date + timedelta(days=1)
+        request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
+        request.session["end-date"] = end_date.strftime("%Y-%m-%dT%H:%M")
+    
+    return redirect(f"mostrarelatorio")
 
 
 def estado(request):
@@ -137,13 +152,9 @@ def estado(request):
 
 
 def mostrarelatorio(request):
-    if request.method == "POST":  # Relatório de período específico
-        initial_date = request.POST["data-inicio"]
-        end_date = request.POST["data-fim"]
-    elif request.method == "GET":  # Relatório do dia
-        initial_date = datetime.now().date()
-        end_date = initial_date + timedelta(days=1)
-    
+    initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%dT%H:%M")
+    end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%dT%H:%M")
+
     voos_filter = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
     voos_qs = Voos.objects.all()
     context = {
