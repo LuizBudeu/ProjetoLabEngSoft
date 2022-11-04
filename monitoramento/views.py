@@ -148,13 +148,13 @@ def relatorio(request):
         end_date = request.POST["data-fim"]
         request.session["initial-date"] = initial_date
         request.session["end-date"] = end_date
+        return redirect(f"mostrarelatoriogeral")
 
-    else:  # Relatório do dia
-        initial_date = datetime.now().date()
-        end_date = initial_date + timedelta(days=1)
-        request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
-        request.session["end-date"] = end_date.strftime("%Y-%m-%dT%H:%M")
-    
+    # Relatório do dia
+    initial_date = datetime.now().date()
+    end_date = initial_date + timedelta(days=1)
+    request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
+    request.session["end-date"] = end_date.strftime("%Y-%m-%dT%H:%M")
     return redirect(f"mostrarelatoriodia")
 
 
@@ -195,3 +195,7 @@ def mostrarelatoriodia(request):
         'voos_finalizados': voos_finalizados,
     }
     return render(request, 'mostrarelatoriodia.html', context)
+
+def mostrarelatoriogeral(request):
+    context = {}
+    return render(request, 'mostrarelatoriogeral.html', context)
