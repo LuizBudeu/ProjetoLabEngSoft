@@ -95,7 +95,14 @@ def crudread(request):
 
 
 def crudupdate(request):
-    context = {}
+    voos_qs = Voos.objects.all()
+    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
+    voos_qs = voos_filter.qs
+
+    context = {
+        'voos_filter': voos_filter,
+        'voos_qs': voos_qs,
+    }
     return render(request, 'crud-update.html', context)
 
 
@@ -104,18 +111,18 @@ def cruddelete(request):
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     codigo = None
+    obj = None
     
-    if request.method =='GET': 
-        codigo = request.GET.get('codigo')  # TODO codigo unico?
-        obj = Voos.objects.filter(codigo=codigo).delete()  # TODO tela de confirmação de delete
-        print(obj)
+    if request.method == 'POST':
+        codigo = request.POST['codigo']
+        obj = Voos.objects.filter(codigo=codigo).delete() 
     
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
         'codigo': codigo,
         'obj': obj,
-        'error': True if obj[0]==0 and codigo else False,
+        'error': True if obj is None and codigo else False,
     }
     return render(request, 'crud-delete.html', context)
 
@@ -136,13 +143,13 @@ def relatorio(request):
     if request.method == "GET":
         return render(request, 'relatorio.html', context)
 
-    if request.method == "POST":  # Relatório de período específico
+    if request.POST.get("data-inicio") is not None:  # Relatório de período específico
         initial_date = request.POST["data-inicio"]
         end_date = request.POST["data-fim"]
         request.session["initial-date"] = initial_date
         request.session["end-date"] = end_date
 
-    elif request.method == "PATCH":  # Relatório do dia
+    else:  # Relatório do dia
         initial_date = datetime.now().date()
         end_date = initial_date + timedelta(days=1)
         request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")

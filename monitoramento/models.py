@@ -15,7 +15,7 @@ class Voos(models.Model):
 
     companhia_aerea = models.CharField(max_length=100, blank=False)
     codigo = models.CharField(max_length=6, blank=False)  # codigo precisa ser 2 letras e 4 números (XX1111)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=True, null=True)
     origem = models.CharField(max_length=100, blank=False)
     destino = models.CharField(max_length=100, blank=False)
     partida_prevista = models.DateTimeField(blank=False)
