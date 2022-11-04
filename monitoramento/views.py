@@ -162,9 +162,15 @@ def estado(request):
     voos_qs = Voos.objects.all()
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
+    obj = None
+    if request.method == 'POST':
+        codigo = request.POST['codigo']
+        status = request.POST['status']
+        obj = Voos.objects.filter(codigo=codigo).update() 
     context = {
         'voos_filter': voos_filter,
-         'voos_qs': voos_qs,
+        'voos_qs': voos_qs,
+        'obj': obj,
     }
     return render(request, 'estado.html', context)
 

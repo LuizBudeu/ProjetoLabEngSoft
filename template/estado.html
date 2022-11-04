@@ -30,8 +30,8 @@
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link"
-              >&#8203; <span class="sr-only">(current)</span></a
+            <a class="nav-link" href="{% url 'monitoramento' %}"
+              >Voltar <span class="sr-only">(current)</span></a
             >
           </li>
         </ul>
@@ -39,45 +39,46 @@
     </nav>
 
     <h2>Atualização de estado</h2>
-    <div>
       <form method="get">
         {{ voos_filter.form.as_p }}
         <input type="submit" value="Selecionar voo" />
       </form>
     
-      <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-        <option selected>{{voo.status}}</option>
-        <option value="embarcando">embarcando</option>
-        <option value="cancelado">cancelado</option>
-        <option value="programado">programado</option>
-        <option value="taxiando">taxiando</option>
-        <option value="pronto">pronto</option>
-        <option value="autorizado">autorizado</option>
-        <option value="em voo">em voo</option>
-        <option value="aterrissado">aterrissado</option>
-        <input type="submit" value="Atualizar Estado" />
-      </select>
-    </div>
-    {% if voos.estado == taxiando %}
-    <label for="partida_real">Partida real</label>
-    <input
-      name="partida_real"
-      type="datetime-local"
-      class="form-control"
-      placeholder="Partida real"
-    />
-    {% endif %}
-    {% if voos.estado == aterrissado %}
-    <label for="chegada_real">Chegada real</label>
-    <input
-      name="chegada_real"
-      type="datetime-local"
-      class="form-control"
-      placeholder="Chegada real"
-    />
-    {% endif %}
-    <div>
-      <a class="btn btn-primary" href="{% url 'monitoramento' %}" role="button"> Retornar &raquo; </a>
-    </div>
+      {% if voos_qs|length == 1 %}
+      {% for voo in voos_qs %}
+      <form method="GET" action="estado.html">
+        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="status">
+          <option selected>{{voo.status}}</option>
+          <option value="embarcando">embarcando</option>
+          <option value="cancelado">cancelado</option>
+          <option value="programado">programado</option>
+          <option value="taxiando">taxiando</option>
+          <option value="pronto">pronto</option>
+          <option value="autorizado">autorizado</option>
+          <option value="em voo">em voo</option>
+          <option value="aterrissado">aterrissado</option>
+          <input type="submit" value="Atualizar Estado" />
+        </select>
+      </form> 
+        {% if voo.status == taxiando %}
+          <label for="partida_real">Partida real</label>
+            <input
+              name="partida_real"
+              type="datetime-local"
+              class="form-control"
+              placeholder="Partida real"
+            />
+        {% endif %}
+        {% if voo.status == aterrissado %}
+          <label for="chegada_real">Chegada real</label>
+            <input
+              name="chegada_real"
+              type="datetime-local"
+              class="form-control"
+              placeholder="Chegada real"
+            />
+        {% endif %}
+      {% endfor %}
+      {% endif %}
   </body>
 </html>
