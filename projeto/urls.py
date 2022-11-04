@@ -32,5 +32,6 @@ urlpatterns = [
     path('monitoramento/', views.monitoramento, name='monitoramento'),
     path('relatorio/', views.relatorio, name='relatorio'),
     path('monitoramento/estado/',  views.estado, name='estado'),
-    path('relatorio/mostra/',  views.mostrarelatorio, name='mostrarelatorio')
+    path('relatorio/mostradia/',  views.mostrarelatoriodia, name='mostrarelatoriodia'),
+    path('relatorio/mostrageral/',  views.mostrarelatoriogeral, name='mostrarelatoriogeral')
 ]
