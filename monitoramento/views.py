@@ -136,13 +136,13 @@ def relatorio(request):
     if request.method == "GET":
         return render(request, 'relatorio.html', context)
 
-    if request.method == "POST":  # Relatório de período específico
+    if request.POST.get("data-inicio") is not None:  # Relatório de período específico
         initial_date = request.POST["data-inicio"]
         end_date = request.POST["data-fim"]
         request.session["initial-date"] = initial_date
         request.session["end-date"] = end_date
 
-    elif request.method == "PATCH":  # Relatório do dia
+    else:  # Relatório do dia
         initial_date = datetime.now().date()
         end_date = initial_date + timedelta(days=1)
         request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
