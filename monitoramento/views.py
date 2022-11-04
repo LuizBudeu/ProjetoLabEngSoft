@@ -155,7 +155,7 @@ def relatorio(request):
         request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
         request.session["end-date"] = end_date.strftime("%Y-%m-%dT%H:%M")
     
-    return redirect(f"mostrarelatorio")
+    return redirect(f"mostrarelatoriodia")
 
 
 def estado(request):
@@ -169,14 +169,29 @@ def estado(request):
     return render(request, 'estado.html', context)
 
 
-def mostrarelatorio(request):
+def mostrarelatoriodia(request):
     initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%dT%H:%M")
     end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%dT%H:%M")
 
-    voos_qs = Voos.objects.all()
-    voos_filtered = voos_qs.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
+    voos_filtered = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
+
+    voos_cancelados = voos_filtered.filter(status="cancelado")
+    voos_embarcando = voos_filtered.filter(status="embarcando")
+    voos_programados = voos_filtered.filter(status="programado")
+    voos_autorizados = voos_filtered.filter(status="autorizado")
+    voos_taxiando = voos_filtered.filter(status="taxiando")
+    voos_prontos = voos_filtered.filter(status="prontos")
+    voos_em_andamento = voos_filtered.filter(status="em voo")
+    voos_finalizados = voos_filtered.filter(status="aterrissado")
+
     context = {
-        'voos_filtered': voos_filtered,
-        'voos_qs': voos_qs,
+        'voos_cancelados': voos_cancelados,
+        'voos_embarcando': voos_embarcando,
+        'voos_programados': voos_programados,
+        'voos_autorizados': voos_autorizados,
+        'voos_taxiando': voos_taxiando,
+        'voos_prontos': voos_prontos,
+        'voos_em_andamento': voos_em_andamento,
+        'voos_finalizados': voos_finalizados,
     }
-    return render(request, 'mostrarelatorio.html', context)
+    return render(request, 'mostrarelatoriodia.html', context)
