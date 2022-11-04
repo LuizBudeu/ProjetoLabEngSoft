@@ -14,9 +14,11 @@
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link"
-              ><span class="sr-only">(current)</span> &#8203;
-            </a>
+            <div>
+              <a class="btn btn-primary" href="{% url 'crud' %}" role="button">
+                Voltar &raquo;
+              </a>
+            </div>
           </li>
         </ul>
       </div>
@@ -58,14 +60,14 @@
         <label for="partida_prevista">Partida prevista</label>
         <input
           name="partida_prevista"
-          type="text"
+          type="datetime-local"
           class="form-control"
           placeholder="Partida prevista"
         />
         <label for="chegada_prevista">Chegada prevista</label>
         <input
           name="chegada_prevista"
-          type="text"
+          type="datetime-local"
           class="form-control"
           placeholder="Chegada prevista"
         />
@@ -77,11 +79,8 @@
     {% if obj %}
       <p style="color:green">Voo criado com sucesso</p>
     {% endif %} 
-
-    <div>
-      <a class="btn btn-primary" href="{% url 'crud' %}" role="button">
-        Confirmar &raquo;
-      </a>
-    </div>
+    {% if error %}
+      <p style="color:red">{{error}}</p>
+    {% endif %} 
   </body>
 </html>

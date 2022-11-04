@@ -15,18 +15,16 @@
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link"
-              ><span class="sr-only">(current)</span> &#8203; </a
-            >
+            <div>
+              <a class="btn btn-primary" href="{% url 'crud' %}" role="button">
+                Voltar &raquo;
+              </a>
+            </div>
           </li>
         </ul>
       </div>
     </nav>
     
       <h1>Atualizar um Voo</h1>
-
-    <div>
-      <a class="btn btn-primary" href="{% url 'crud' %}" role="button"> Confirmar &raquo; </a>
-    </div>
   </body>
 </html>
