@@ -9,19 +9,7 @@
     <title>Atualizar um voo</title>
     <link rel="stylesheet" href="{% static 'projeto/home.css'%}" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
-      #table-wrapper {
-        position:relative;
-      }
-      #table-scroll {
-        height:450px;
-        overflow:auto;  
-        margin-top:20px;
-      }
-      #table-wrapper table {
-        width:100%;
-      }
-      </style>
+
 
   </head>
   <body>
@@ -42,16 +30,19 @@
     <h1 style="text-align: center">Atualizar dados de um Voo</h1>
 
     <div>
-      <form style="padding-left:5px" method="get">
-        {{ voos_filter.form }}
-        <input type="submit" />
-      </form>
+      <p style="padding-left:5px"><b>Pesquisar</b> voo com código:
+        <form style="padding-left:5px" method="get">
+          {{ voos_filter.form }}
+          <input type="submit" />
+        </form>
+      </p>
 
       <div id="table-wrapper">
         <div id="table-scroll">
           <table class="table">
             <thead class="thead-dark">
               <tr>
+                <th>Id</th>
                 <th>Companhia Aérea</th>
                 <th>Código</th>
                 <th>Status</th>
@@ -66,6 +57,7 @@
             <tbody>
               {% for voo in voos_qs %}
                 <tr>
+                  <th>{{voo.id}}</th>
                   <th>{{voo.companhia_aerea}}</th>
                   <th>{{voo.codigo}}</th>
                   <th>{{voo.status}}</th>
@@ -83,6 +75,57 @@
       </div>
       </a>
     </div>
+
+    <form method="POST">
+      <div class="form-group col-md-3">
+        {% csrf_token %}
+        <label for="companhia">Companhia Aérea</label>
+        <input
+          name="companhia"
+          type="text"
+          class="form-control"
+          placeholder="Companhia Aérea"
+        />
+        <label for="codigo">Código</label>
+        <input
+          name="codigo"
+          type="text"
+          class="form-control"
+          placeholder="Código"
+        />
+        <label for="origem">Origem</label>
+        <input
+          name="origem"
+          type="text"
+          class="form-control"
+          placeholder="Origem"
+        />
+        <label for="destino">Destino</label>
+        <input
+          name="destino"
+          type="text"
+          class="form-control"
+          placeholder="Destino"
+        />
+        <label for="partida_prevista">Partida prevista</label>
+        <input
+          name="partida_prevista"
+          type="datetime-local"
+          class="form-control"
+          placeholder="Partida prevista"
+        />
+        <label for="chegada_prevista">Chegada prevista</label>
+        <input
+          name="chegada_prevista"
+          type="datetime-local"
+          class="form-control"
+          placeholder="Chegada prevista"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-secondary">Atualizar</button>
+    </form>
+    {{obj}}
 
   </body>
 </html>

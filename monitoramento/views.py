@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
 from .filters import VoosFilter
-import json
+import re
 
 
 def first(request):
@@ -98,10 +98,19 @@ def crudupdate(request):
     voos_qs = Voos.objects.all()
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
+    obj = None
+
+    if request.method == 'POST':  # TODO debugar isso
+        for key in request.POST:
+            if key in Voos._meta.fields:
+                codigo = request.GET['codigo']
+                obj = Voos.objects.get(codigo=codigo).update(key=request.POST[key.name])
+                print(obj)
 
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
+        'obj': obj,
     }
     return render(request, 'crud-update.html', context)
 
@@ -114,7 +123,7 @@ def cruddelete(request):
     obj = None
     
     if request.method == 'POST':
-        codigo = request.POST['codigo']
+        codigo = request.POST['codigo']  # TODO ver error message
         obj = Voos.objects.filter(codigo=codigo).delete() 
     
     context = {
@@ -148,14 +157,14 @@ def relatorio(request):
         end_date = request.POST["data-fim"]
         request.session["initial-date"] = initial_date
         request.session["end-date"] = end_date
+        return redirect(f"mostrarelatoriogeral")
 
-    else:  # Relatório do dia
-        initial_date = datetime.now().date()
-        end_date = initial_date + timedelta(days=1)
-        request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
-        request.session["end-date"] = end_date.strftime("%Y-%m-%dT%H:%M")
-    
-    return redirect(f"mostrarelatorio")
+    # Relatório do dia
+    initial_date = datetime.now().date()
+    end_date = initial_date + timedelta(days=1)
+    request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
+    request.session["end-date"] = end_date.strftime("%Y-%m-%dT%H:%M")
+    return redirect(f"mostrarelatoriodia")
 
 
 def estado(request):
@@ -175,14 +184,33 @@ def estado(request):
     return render(request, 'estado.html', context)
 
 
-def mostrarelatorio(request):
+def mostrarelatoriodia(request):
     initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%dT%H:%M")
     end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%dT%H:%M")
 
-    voos_qs = Voos.objects.all()
-    voos_filtered = voos_qs.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
+    voos_filtered = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
+
+    voos_cancelados = voos_filtered.filter(status="cancelado")
+    voos_embarcando = voos_filtered.filter(status="embarcando")
+    voos_programados = voos_filtered.filter(status="programado")
+    voos_autorizados = voos_filtered.filter(status="autorizado")
+    voos_taxiando = voos_filtered.filter(status="taxiando")
+    voos_prontos = voos_filtered.filter(status="prontos")
+    voos_em_andamento = voos_filtered.filter(status="em voo")
+    voos_finalizados = voos_filtered.filter(status="aterrissado")
+
     context = {
-        'voos_filtered': voos_filtered,
-        'voos_qs': voos_qs,
+        'voos_cancelados': voos_cancelados,
+        'voos_embarcando': voos_embarcando,
+        'voos_programados': voos_programados,
+        'voos_autorizados': voos_autorizados,
+        'voos_taxiando': voos_taxiando,
+        'voos_prontos': voos_prontos,
+        'voos_em_andamento': voos_em_andamento,
+        'voos_finalizados': voos_finalizados,
     }
-    return render(request, 'mostrarelatorio.html', context)
+    return render(request, 'mostrarelatoriodia.html', context)
+
+def mostrarelatoriogeral(request):
+    context = {}
+    return render(request, 'mostrarelatoriogeral.html', context)

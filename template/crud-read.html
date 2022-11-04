@@ -54,6 +54,7 @@
           <table class="table">
             <thead class="thead-dark">
               <tr>
+                <th>Id</th>
                 <th>Companhia Aérea</th>
                 <th>Código</th>
                 <th>Status</th>
@@ -68,6 +69,7 @@
             <tbody>
               {% for voo in voos_qs %}
                 <tr>
+                  <th>{{voo.id}}</th>
                   <th>{{voo.companhia_aerea}}</th>
                   <th>{{voo.codigo}}</th>
                   <th>{{voo.status}}</th>
