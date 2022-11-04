@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
 from .filters import VoosFilter
-import json
+import re
 
 
 def first(request):
@@ -98,10 +98,19 @@ def crudupdate(request):
     voos_qs = Voos.objects.all()
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
+    obj = None
+
+    if request.method == 'POST':  # TODO debugar isso
+        for key in request.POST:
+            if key in Voos._meta.fields:
+                codigo = request.GET['codigo']
+                obj = Voos.objects.get(codigo=codigo).update(key=request.POST[key.name])
+                print(obj)
 
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
+        'obj': obj,
     }
     return render(request, 'crud-update.html', context)
 
@@ -114,7 +123,7 @@ def cruddelete(request):
     obj = None
     
     if request.method == 'POST':
-        codigo = request.POST['codigo']
+        codigo = request.POST['codigo']  # TODO ver error message
         obj = Voos.objects.filter(codigo=codigo).delete() 
     
     context = {
