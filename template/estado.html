@@ -2,6 +2,20 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
+  <style>
+    #table-wrapper {
+      position:relative;
+    }
+    #table-scroll {
+      height:450px;
+      overflow:auto;  
+      margin-top:20px;
+    }
+    #table-wrapper table {
+      width:100%;
+    }
+  </style>
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -25,14 +39,45 @@
     </nav>
 
     <h2>Atualização de estado</h2>
-
-    <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-      <option selected>Estado Atual</option>
-      <option value="1">Próximo Estado</option>
-    </select>
-
     <div>
-      <a class="btn btn-primary" href="{% url 'monitoramento' %}" role="button"> Atualizar Estado &raquo; </a>
+      <form method="get">
+        {{ voos_filter.form.as_p }}
+        <input type="submit" value="Selecionar voo" />
+      </form>
+    
+      <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+        <option selected>{{voo.status}}</option>
+        <option value="embarcando">embarcando</option>
+        <option value="cancelado">cancelado</option>
+        <option value="programado">programado</option>
+        <option value="taxiando">taxiando</option>
+        <option value="pronto">pronto</option>
+        <option value="autorizado">autorizado</option>
+        <option value="em voo">em voo</option>
+        <option value="aterrissado">aterrissado</option>
+        <input type="submit" value="Atualizar Estado" />
+      </select>
+    </div>
+    {% if voos.estado == taxiando %}
+    <label for="partida_real">Partida real</label>
+    <input
+      name="partida_real"
+      type="datetime-local"
+      class="form-control"
+      placeholder="Partida real"
+    />
+    {% endif %}
+    {% if voos.estado == aterrissado %}
+    <label for="chegada_real">Chegada real</label>
+    <input
+      name="chegada_real"
+      type="datetime-local"
+      class="form-control"
+      placeholder="Chegada real"
+    />
+    {% endif %}
+    <div>
+      <a class="btn btn-primary" href="{% url 'monitoramento' %}" role="button"> Retornar &raquo; </a>
     </div>
   </body>
 </html>
