@@ -63,7 +63,7 @@ def crudcreate(request):
             # TODO parsear codigo
             
             voo = {
-                'companhia_aerea': request.POST['companhia'],
+                'companhia_aerea': request.POST['companhia_aerea'],
                 'codigo': request.POST['codigo'],
                 'origem': request.POST['origem'],
                 'destino': request.POST['destino'],
@@ -99,14 +99,22 @@ def crudupdate(request):
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     obj = None
+    
+    voos_fields = [key.name for key in Voos._meta.fields]
+    print(voos_fields)
+    a = {}
 
-    if request.method == 'POST':  # TODO debugar isso
+    if request.method == 'POST':
         for key in request.POST:
-            if key in Voos._meta.fields:
-                codigo = request.GET['codigo']
-                obj = Voos.objects.get(codigo=codigo).update(key=request.POST[key.name])
-                print(obj)
-
+            if request.POST[key] == '':
+                continue
+            if key in voos_fields:
+                print(key)
+                a[key] = request.POST[key]
+        
+        print(a)
+        obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**a)
+                
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
@@ -121,9 +129,11 @@ def cruddelete(request):
     voos_qs = voos_filter.qs
     codigo = None
     obj = None
+    deleted = False
     
     if request.method == 'POST':
-        codigo = request.POST['codigo']  # TODO ver error message
+        deleted = True
+        codigo = request.POST['codigo'] 
         obj = Voos.objects.filter(codigo=codigo).delete() 
     
     context = {
@@ -131,7 +141,7 @@ def cruddelete(request):
         'voos_qs': voos_qs,
         'codigo': codigo,
         'obj': obj,
-        'error': True if obj is None and codigo else False,
+        'error': True if deleted and codigo else False,
     }
     return render(request, 'crud-delete.html', context)
 

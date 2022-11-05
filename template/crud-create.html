@@ -8,6 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Criar um voo</title>
     <link rel="stylesheet" href="{% static 'projeto/home.css'%}" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -29,9 +35,9 @@
     <form action="{% url 'crudcreate' %}" method="POST">
       <div class="form-group col-md-3">
         {% csrf_token %}
-        <label for="companhia">Companhia Aérea</label>
+        <label for="companhia_aerea">Companhia Aérea</label>
         <input
-          name="companhia"
+          name="companhia_aerea"
           type="text"
           class="form-control"
           placeholder="Companhia Aérea"
@@ -77,10 +83,14 @@
     </form>
 
     {% if obj %}
-      <p style="color:green">Voo criado com sucesso</p>
+    <div class="alert alert-success" role="alert">
+      Voo criado com sucesso!
+    </div>
     {% endif %} 
     {% if error %}
-      <p style="color:red">{{error}}</p>
+    <div class="alert alert-danger" role="alert">
+      {{error}}
+    </div>
     {% endif %} 
   </body>
 </html>

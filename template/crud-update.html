@@ -79,9 +79,9 @@
     <form method="POST">
       <div class="form-group col-md-3">
         {% csrf_token %}
-        <label for="companhia">Companhia Aérea</label>
+        <label for="companhia_aerea">Companhia Aérea</label>
         <input
-          name="companhia"
+          name="companhia_aerea"
           type="text"
           class="form-control"
           placeholder="Companhia Aérea"
@@ -125,7 +125,12 @@
 
       <button type="submit" class="btn btn-secondary">Atualizar</button>
     </form>
-    {{obj}}
+    
+    {% if obj %}
+      <div class="alert alert-success" role="alert">
+        Voo atualizado com sucesso!
+      </div>
+    {% endif %}
 
   </body>
 </html>

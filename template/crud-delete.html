@@ -68,13 +68,13 @@
     </p>
 
     {% if obj.1 %}
-    <p style="color: green">
+    <div class="alert alert-success" role="alert">
       Voo com código <b>{{codigo}}</b> deletado com sucesso
-    </p>
+    </div>
     {% endif %} {% if error %}
-    <p style="color: red">
+    <div class="alert alert-danger" role="alert">
       Não foi possível encontrar voo com código <b>{{codigo}}</b>
-    </p>
+    </div>
     {% endif %}
 
     <div id="table-wrapper">
