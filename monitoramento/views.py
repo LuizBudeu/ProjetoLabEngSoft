@@ -165,6 +165,9 @@ def relatorio(request):
     if request.POST.get("data-inicio") is not None:  # Relatório de período específico
         initial_date = request.POST["data-inicio"]
         end_date = request.POST["data-fim"]
+        if datetime.strptime(initial_date, "%Y-%m-%dT%H:%M") > datetime.strptime(end_date, "%Y-%m-%dT%H:%M"):  # Erro de datas
+            context["error_msg"] = "Insira datas válidas."
+            return render(request, 'relatorio.html', context)
         request.session["initial-date"] = initial_date
         request.session["end-date"] = end_date
         return redirect(f"mostrarelatoriogeral")
