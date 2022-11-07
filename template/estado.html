@@ -46,7 +46,7 @@
     
       {% if voos_qs|length == 1 %}
       {% for voo in voos_qs %}
-      <form method="POST">]
+      <form method="POST">
         {% csrf_token %}
         <div class="form-group col-md-3"> <!--TODO: Validar data de envio e status no backend-->
           {% if voo.status == "taxiando" %}
@@ -76,7 +76,7 @@
         {% csrf_token %}
         <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="status">
           <option selected>{{voo.status}}</option>
-          {% if voo.status == "None" %}
+          {% if voo.status == null %}
           <option value="cancelado">cancelado</option>
           <option value="embarcando">embarcando</option>
           {% elif  voo.status == "embarcando" %}

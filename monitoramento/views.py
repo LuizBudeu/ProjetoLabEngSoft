@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
 from .filters import VoosFilter
 import re
+import pytz
 
 
 def first(request):
@@ -189,8 +190,23 @@ def estado(request):
     voos_fields = [key.name for key in Voos._meta.fields]
     print(voos_fields)
     a = {}
-
+    context = {
+        'voos_filter': voos_filter,
+        'voos_qs': voos_qs,
+        'obj': obj,
+    }
     if request.method == 'POST':
+        voo = voos_qs.get()
+        if request.POST.get("chegada_real") is not None:
+            utc=pytz.UTC
+            if voo.chegada_prevista >  utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
+                context["error_msg"] = "Insira datas válidas."
+                return render(request, 'estado.html', context)
+        if request.POST.get("partida_real") is not None:
+            utc=pytz.UTC
+            if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
+                context["error_msg"] = "Insira datas válidas."
+                return render(request, 'estado.html', context)
         for key in request.POST:
             if request.POST[key] == '':
                 continue
@@ -200,12 +216,6 @@ def estado(request):
         
         print(a)
         obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**a)
-                
-    context = {
-        'voos_filter': voos_filter,
-        'voos_qs': voos_qs,
-        'obj': obj,
-    }
     return render(request, 'estado.html', context)
 
 
