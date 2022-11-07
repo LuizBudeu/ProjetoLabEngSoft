@@ -1,47 +1,100 @@
-### COPIANDO TESTES DO GITHUB ###
 from django.test import TestCase
 
 # Create your tests here.
 
 
-from catalog.models import Author
 from django.urls import reverse
 
 
-class AuthorListViewTest(TestCase):
+class MonitoramentoViewTest(TestCase):
 
-    @classmethod
-    def setUpTestData(cls):
-        # Create authors for pagination tests
-        number_of_authors = 13
-        for author_id in range(number_of_authors):
-            Author.objects.create(first_name='Christian {0}'.format(author_id),
-                                  last_name='Surname {0}'.format(author_id))
-
-    def test_view_url_exists_at_desired_location(self):
-        response = self.client.get('/catalog/authors/')
-        self.assertEqual(response.status_code, 200)
-        
-    def test_view_url_accessible_by_name(self):
-        response = self.client.get(reverse('authors'))
+    def test_view_url_exists_at_desired_location_login(self):
+        response = self.client.get('/login/')
         self.assertEqual(response.status_code, 200)
 
-    def test_view_uses_correct_template(self):
-        response = self.client.get(reverse('authors'))
+    def test_view_url_exists_at_desired_location_home(self):
+        response = self.client.get('/home/')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'catalog/author_list.html')
 
-    def test_pagination_is_ten(self):
-        response = self.client.get(reverse('authors'))
+    def test_view_url_exists_at_desired_location_crud(self):
+        response = self.client.get('/crud/')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('is_paginated' in response.context)
-        self.assertTrue(response.context['is_paginated'] is True)
-        self.assertEqual(len(response.context['author_list']), 10)
 
-    def test_lists_all_authors(self):
-        # Get second page and confirm it has (exactly) the remaining 3 items
-        response = self.client.get(reverse('authors')+'?page=2')
+    def test_view_url_exists_at_desired_location_crudcreate(self):
+        response = self.client.get('/crud/create/')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('is_paginated' in response.context)
-        self.assertTrue(response.context['is_paginated'] is True)
-        self.assertEqual(len(response.context['author_list']), 3)
+
+    def test_view_url_exists_at_desired_location_crudread(self):
+        response = self.client.get('/crud/read/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_exists_at_desired_location_crudupdate(self):
+        response = self.client.get('/crud/update/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_exists_at_desired_location_cruddelete(self):
+        response = self.client.get('/crud/delete/')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_view_url_accessible_by_name_login(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name_home(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name_crud(self):
+        response = self.client.get(reverse('crud'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name_crudcreate(self):
+        response = self.client.get(reverse('crudcreate'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name_crudread(self):
+        response = self.client.get(reverse('crudread'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name_crudupdate(self):
+        response = self.client.get(reverse('crudupdate'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name_cruddelete(self):
+        response = self.client.get(reverse('cruddelete'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template_login(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'login.html')
+
+    def test_view_uses_correct_template_home(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+
+    def test_view_uses_correct_template_crud(self):
+        response = self.client.get(reverse('crud'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'crud.html')
+
+    def test_view_uses_correct_template_crudcreate(self):
+        response = self.client.get(reverse('crudcreate'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'crud-create.html')
+
+    def test_view_uses_correct_template_crudread(self):
+        response = self.client.get(reverse('crudread'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'crud-read.html')
+
+    def test_view_uses_correct_template_crudupdate(self):
+        response = self.client.get(reverse('crudupdate'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'crud-update.html')
+
+    def test_view_uses_correct_template_cruddelete(self):
+        response = self.client.get(reverse('cruddelete'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'crud-delete.html')
