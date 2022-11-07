@@ -185,10 +185,22 @@ def estado(request):
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     obj = None
+     
+    voos_fields = [key.name for key in Voos._meta.fields]
+    print(voos_fields)
+    a = {}
+
     if request.method == 'POST':
-        codigo = request.POST['codigo']
-        status = request.POST['status']
-        obj = Voos.objects.filter(codigo=codigo).update() 
+        for key in request.POST:
+            if request.POST[key] == '':
+                continue
+            if key in voos_fields:
+                print(key)
+                a[key] = request.POST[key]
+        
+        print(a)
+        obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**a)
+                
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,

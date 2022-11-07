@@ -46,7 +46,28 @@
     
       {% if voos_qs|length == 1 %}
       {% for voo in voos_qs %}
-      <form method="GET" action="estado.html">
+      <form method="POST">
+        <div class="form-group col-md-3">
+          {% csrf_token %}
+          {% if voo.status == taxiando %}
+            <label for="partida_real">Partida real</label>
+              <input
+                name="partida_real"
+                type="datetime-local"
+                class="form-control"
+                placeholder="Partida real"
+              />
+          {% endif %}
+          {% if voo.status == aterrissado %}
+            <label for="chegada_real">Chegada real</label>
+            <input
+              name="chegada_real"
+              type="datetime-local"
+              class="form-control"
+              placeholder="Chegada real"
+            />
+          {% endif %}
+        </div>
         <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="status">
           <option selected>{{voo.status}}</option>
           <option value="embarcando">embarcando</option>
@@ -57,27 +78,9 @@
           <option value="autorizado">autorizado</option>
           <option value="em voo">em voo</option>
           <option value="aterrissado">aterrissado</option>
-          <input type="submit" value="Atualizar Estado" />
         </select>
+        <button type="submit" class="btn btn-secondary">Atualizar</button>
       </form> 
-        {% if voo.status == taxiando %}
-          <label for="partida_real">Partida real</label>
-            <input
-              name="partida_real"
-              type="datetime-local"
-              class="form-control"
-              placeholder="Partida real"
-            />
-        {% endif %}
-        {% if voo.status == aterrissado %}
-          <label for="chegada_real">Chegada real</label>
-            <input
-              name="chegada_real"
-              type="datetime-local"
-              class="form-control"
-              placeholder="Chegada real"
-            />
-        {% endif %}
       {% endfor %}
       {% endif %}
   </body>
