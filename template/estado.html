@@ -57,15 +57,17 @@
                 class="form-control"
                 placeholder="Partida real"
               />
+            <h4 style="color:rgb(255, 56, 56);">{{error_msg}}</h4>
           {% endif %}
           {% if voo.status == "aterrissado" %}
             <label for="chegada_real">Chegada real</label>
-            <input
-              name="chegada_real"
-              type="datetime-local"
-              class="form-control"
-              placeholder="Chegada real"
-            />
+              <input
+                name="chegada_real"
+                type="datetime-local"
+                class="form-control"
+                placeholder="Chegada real"
+              />
+            <h4 style="color:rgb(255, 56, 56);">{{error_msg}}</h4>
           {% endif %}
         </div>
         {% if voo.status == "aterrissado" or voo.status == "taxiando" %}

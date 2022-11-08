@@ -36,6 +36,14 @@ class MonitoramentoViewTest(TestCase):
         response = self.client.get('/crud/delete/')
         self.assertEqual(response.status_code, 200)
     
+    def test_view_monitoramento_url_exists_at_desired_location(self):
+        response = self.client.get('/monitoramento/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_estado_url_exists_at_desired_location(self):
+        response = self.client.get('/monitoramento/estado')
+        self.assertEqual(response.status_code, 200)
+    
     def test_view_url_accessible_by_name_login(self):
         response = self.client.get(reverse('login'))
         self.assertEqual(response.status_code, 200)
@@ -62,6 +70,14 @@ class MonitoramentoViewTest(TestCase):
 
     def test_view_url_accessible_by_name_cruddelete(self):
         response = self.client.get(reverse('cruddelete'))
+        self.assertEqual(response.status_code, 200)
+    
+    def test_view_url_accessible_by_name_monitoramento(self):
+        response = self.client.get(reverse('monitoramento'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name_estado(self):
+        response = self.client.get(reverse('estado'))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template_login(self):
@@ -98,3 +114,13 @@ class MonitoramentoViewTest(TestCase):
         response = self.client.get(reverse('cruddelete'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'crud-delete.html')
+    
+    def test_view_uses_correct_template_monitoramento(self):
+        response = self.client.get(reverse('monitoramento'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'monitoramento.html')
+
+    def test_view_uses_correct_template_estado(self):
+        response = self.client.get(reverse('estado'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'estado.html')
