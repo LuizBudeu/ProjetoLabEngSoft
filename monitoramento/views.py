@@ -6,10 +6,13 @@ import re
 import pytz
 
 
+tries = 0
+
 def first(request):
     return render(request, 'FIRST.html')
 
 def login(request):
+    global tries
     context = {}
     logins = {
         'felipe' : {
@@ -33,11 +36,15 @@ def login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        if username in logins and password == logins[username]['password']:
+        if username in logins and password == logins[username]['password'] and 2-tries >= 0:
             request.session['permission'] = logins[username]['permission']
             return redirect(f"home")
+        elif 2-tries > 0: 
+            tries += 1
+            context['error_msg'] = f'Usuário ou senha errados. Tentativas restantes: {3-tries}'
         else:
-            context['error_msg'] = 'Usuário ou senha errados.'
+            tries += 1
+            context['error_msg'] = 'Tentativas esgotadas.'
 
     return render(request, 'login.html', context)
 
@@ -71,8 +78,8 @@ def crudcreate(request):
                 'partida_prevista': partida_prevista,
                 'chegada_prevista': chegada_prevista,
             }
-        
             obj = Voos.objects.create(**voo)
+
         except Exception as e:
             error = e
 
@@ -103,18 +110,16 @@ def crudupdate(request):
     
     voos_fields = [key.name for key in Voos._meta.fields]
     print(voos_fields)
-    a = {}
+    fields = {}
 
     if request.method == 'POST':
         for key in request.POST:
             if request.POST[key] == '':
                 continue
             if key in voos_fields:
-                print(key)
-                a[key] = request.POST[key]
+                fields[key] = request.POST[key]
         
-        print(a)
-        obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**a)
+        obj = Voos.objects.filter(id=request.GET['id']).update(**fields)
                 
     context = {
         'voos_filter': voos_filter,
@@ -126,23 +131,23 @@ def crudupdate(request):
 
 def cruddelete(request):
     voos_qs = Voos.objects.all()
-    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
+    voos_filter = VoosFilter(request.GET, queryset=voos_qs) 
     voos_qs = voos_filter.qs
-    codigo = None
+    id = None
     obj = None
     deleted = False
-    
+
     if request.method == 'POST':
         deleted = True
-        codigo = request.POST['codigo'] 
-        obj = Voos.objects.filter(codigo=codigo).delete() 
+        id = request.POST['id'] 
+        obj = Voos.objects.filter(id=id).delete() 
     
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
-        'codigo': codigo,
+        'id': id,
         'obj': obj,
-        'error': True if deleted and codigo else False,
+        'error': True if deleted and not obj[1] else False,
     }
     return render(request, 'crud-delete.html', context)
 

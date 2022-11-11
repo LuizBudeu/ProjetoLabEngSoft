@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,15 +54,15 @@
       </form>
     </p>
 
-    <p style="padding-left:5px"><b>Deletar</b> voo com código:
+    <p style="padding-left:5px"><b>Deletar</b> voo com ID:
       <form style="padding-left:5px" method="post">
         {% csrf_token %}
-        <label for="codigo">Código</label>
+        <label for="id">ID</label>
         <input
-          name="codigo"
+          name="id"
           type="text"
           class="form-control col-sm-3"
-          placeholder="Código"
+          placeholder="ID"
         /> 
         <button type="submit" class="btn btn-secondary">Deletar</button>
       </form>
@@ -69,11 +70,11 @@
 
     {% if obj.1 %}
     <div class="alert alert-success" role="alert">
-      Voo com código <b>{{codigo}}</b> deletado com sucesso
+      Voo com ID <b>{{id}}</b> deletado com sucesso
     </div>
     {% endif %} {% if error %}
     <div class="alert alert-danger" role="alert">
-      Não foi possível encontrar voo com código <b>{{codigo}}</b>
+      Não foi possível encontrar voo com ID <b>{{id}}</b>
     </div>
     {% endif %}
 
