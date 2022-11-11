@@ -166,7 +166,7 @@ def relatorio(request):
     if request.POST.get("data-inicio") is not None:  # Relatório de período específico
         initial_date = request.POST["data-inicio"]
         end_date = request.POST["data-fim"]
-        if datetime.strptime(initial_date, "%Y-%m-%dT%H:%M") > datetime.strptime(end_date, "%Y-%m-%dT%H:%M"):  # Erro de datas
+        if initial_date == "" or end_date == "" or datetime.strptime(initial_date, "%Y-%m-%d") > datetime.strptime(end_date, "%Y-%m-%d"):  # Erro de datas
             context["error_msg"] = "Insira datas válidas."
             return render(request, 'relatorio.html', context)
         request.session["initial-date"] = initial_date
@@ -176,8 +176,8 @@ def relatorio(request):
     # Relatório do dia
     initial_date = datetime.now().date()
     end_date = initial_date + timedelta(days=1)
-    request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
-    request.session["end-date"] = end_date.strftime("%Y-%m-%dT%H:%M")
+    request.session["initial-date"] = initial_date.strftime("%Y-%m-%d")
+    request.session["end-date"] = end_date.strftime("%Y-%m-%d")
     return redirect(f"mostrarelatoriodia")
 
 
@@ -220,8 +220,8 @@ def estado(request):
 
 
 def mostrarelatoriodia(request):
-    initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%dT%H:%M")
-    end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%dT%H:%M")
+    initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%d")
+    end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%d")
 
     voos_filtered = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
 
@@ -247,5 +247,46 @@ def mostrarelatoriodia(request):
     return render(request, 'mostrarelatoriodia.html', context)
 
 def mostrarelatoriogeral(request):
-    context = {}
+    initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%d")
+    end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%d")
+
+    voos_filtered = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
+
+    voos_cancelados = voos_filtered.filter(status="cancelado")
+    n_cancelados = len(voos_cancelados)
+    voos_finalizados = voos_filtered.filter(status="aterrissado")
+    n_finalizados = len(voos_finalizados)
+
+    voos_atrasados = len([voo for voo in voos_filtered.exclude(partida_real__isnull=True) if voo.partida_real > voo.partida_prevista])
+    voos_nao_atrasados = len(voos_filtered) - voos_atrasados
+
+    cia_finalizados_dict = {}
+    for voo in voos_finalizados:
+        if voo.companhia_aerea not in cia_finalizados_dict:
+            cia_finalizados_dict[voo.companhia_aerea] = 1
+        else:
+            cia_finalizados_dict[voo.companhia_aerea] += 1
+    cia_mais_finalizados = max(cia_finalizados_dict if len(cia_finalizados_dict) > 0 else {"":0}, key=cia_finalizados_dict.get) or ""
+    cia_finalizados = cia_finalizados_dict[cia_mais_finalizados]
+
+    cia_cancelados_dict = {}
+    for voo in voos_cancelados:
+        if voo.companhia_aerea not in cia_cancelados_dict:
+            cia_cancelados_dict[voo.companhia_aerea] = 1
+        else:
+            cia_cancelados_dict[voo.companhia_aerea] += 1
+    cia_mais_cancelados = max(cia_cancelados_dict if len(cia_cancelados_dict) > 0 else {"":0}, key=cia_cancelados_dict.get) or ""
+    cia_cancelados = cia_cancelados_dict[cia_mais_cancelados]
+
+    context = {
+        'finalizados' : n_finalizados,
+        'cancelados' : n_cancelados,
+        'atrasados' : voos_atrasados,
+        'nao_atrasados' : voos_nao_atrasados,
+        'companhia_mais_cancelados' : cia_mais_cancelados,
+        'companhia_mais_finalizados' : cia_mais_finalizados,
+        'mais_finalizados' : cia_finalizados,
+        'mais_cancelados' : cia_cancelados
+    }
+
     return render(request, 'mostrarelatoriogeral.html', context)
