@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
-from .filters import VoosFilter
+from .filters import VoosFilter, PartidasFilter, ChegadasFilter
 import re
 import pytz
 
@@ -148,12 +148,17 @@ def cruddelete(request):
 
 
 def monitoramento(request):
-    voos_qs = Voos.objects.all()
-    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
-    voos_qs = voos_filter.qs
+    chegadas_qs = Chegadas.objects.all()
+    chegadas_filter = ChegadasFilter(request.GET, queryset=chegadas_qs)
+    chegadas_qs = chegadas_filter.qs
+    partidas_qs = Chegadas.objects.all()
+    partidas_filter = PartidasFilter(request.GET, queryset=partidas_qs)
+    partidas_qs = partidas_filter.qs
     context = {
-        'voos_filter': voos_filter,
-         'voos_qs': voos_qs,
+        'chegadas_filter': chegadas_filter,
+        'chegadas_qs': chegadas_qs,
+        'partidas_filter': partidas_filter,
+        'partidas_qs': partidas_qs,
     }
     return render(request, 'monitoramento.html', context)
 
