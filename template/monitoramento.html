@@ -50,15 +50,21 @@
           <table class="table">
             <thead class="thead-dark">
               <tr>
+                <th>Companhia Aérea</th>
                 <th>Código</th>
                 <th>Status</th>
+                <th>Chegada prevista</th>
+                <th>Chegada real</th>
               </tr>
             </thead>
             <tbody>
               {% for chegada in chegadas_qs %}
-                <tr>
+                <tr>                  
+                  <th>{{chegada.companhia_aerea}}</th>
                   <th>{{chegada.codigo}}</th>
                   <th>{{chegada.status}}</th>
+                  <th>{{chegada.chegada_prevista}}</th>
+                  <th>{{chegada.chegada_real}}</th>
                 </tr>
               {% endfor %}
             </tbody>
@@ -77,15 +83,23 @@
             <table class="table">
               <thead class="thead-dark">
                 <tr>
+                  <th>Companhia Aerea</th>
                   <th>Código</th>
                   <th>Status</th>
+                  <th>Destino</th>
+                  <th>Partida Prevista</th>
+                  <th>Partida Real</th>
                 </tr>
               </thead>
               <tbody>
                 {% for partida in partidas_qs %}
                   <tr>
+                    <th>{{partida.companhia_aerea}}</th>
                     <th>{{partida.codigo}}</th>
                     <th>{{partida.status}}</th>
+                    <th>{{partida.destino}}</th>
+                    <th>{{partida.partida_prevista}}</th>
+                    <th>{{partida.partida_real}}</th>
                   </tr>
                 {% endfor %}
               </tbody>
