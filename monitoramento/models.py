@@ -39,6 +39,8 @@ class Partidas(models.Model):
         ('aterrissado', 'aterrissado'),
     )
 
+    codigo = models.CharField(max_length=6, blank=False)  # codigo precisa ser 2 letras e 4 números (XX1111)
+    companhia_aerea = models.CharField(max_length=100, blank=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     destino = models.CharField(max_length=100, blank=False)
     partida_prevista = models.DateTimeField(blank=False)
@@ -49,6 +51,9 @@ class Partidas(models.Model):
 
 
 class Chegadas(models.Model):
+
+    codigo = models.CharField(max_length=6, blank=False)  # codigo precisa ser 2 letras e 4 números (XX1111)
+    companhia_aerea = models.CharField(max_length=100, blank=False)
     origem = models.CharField(max_length=100, blank=False)
     chegada_prevista = models.DateTimeField(blank=False)
     chegada_real = models.DateTimeField(blank=True, null=True)

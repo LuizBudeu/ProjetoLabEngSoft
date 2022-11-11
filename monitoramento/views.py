@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
-from .filters import VoosFilter
+from .filters import VoosFilter, PartidasFilter, ChegadasFilter
 import re
 import pytz
 
@@ -153,12 +153,17 @@ def cruddelete(request):
 
 
 def monitoramento(request):
-    voos_qs = Voos.objects.all()
-    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
-    voos_qs = voos_filter.qs
+    chegadas_qs = Chegadas.objects.all()
+    chegadas_filter = ChegadasFilter(request.GET, queryset=chegadas_qs)
+    chegadas_qs = chegadas_filter.qs
+    partidas_qs = Chegadas.objects.all()
+    partidas_filter = PartidasFilter(request.GET, queryset=partidas_qs)
+    partidas_qs = partidas_filter.qs
     context = {
-        'voos_filter': voos_filter,
-         'voos_qs': voos_qs,
+        'chegadas_filter': chegadas_filter,
+        'chegadas_qs': chegadas_qs,
+        'partidas_filter': partidas_filter,
+        'partidas_qs': partidas_qs,
     }
     return render(request, 'monitoramento.html', context)
 
@@ -171,7 +176,7 @@ def relatorio(request):
     if request.POST.get("data-inicio") is not None:  # Relatório de período específico
         initial_date = request.POST["data-inicio"]
         end_date = request.POST["data-fim"]
-        if datetime.strptime(initial_date, "%Y-%m-%dT%H:%M") > datetime.strptime(end_date, "%Y-%m-%dT%H:%M"):  # Erro de datas
+        if initial_date == "" or end_date == "" or datetime.strptime(initial_date, "%Y-%m-%d") > datetime.strptime(end_date, "%Y-%m-%d"):  # Erro de datas
             context["error_msg"] = "Insira datas válidas."
             return render(request, 'relatorio.html', context)
         request.session["initial-date"] = initial_date
@@ -181,8 +186,8 @@ def relatorio(request):
     # Relatório do dia
     initial_date = datetime.now().date()
     end_date = initial_date + timedelta(days=1)
-    request.session["initial-date"] = initial_date.strftime("%Y-%m-%dT%H:%M")
-    request.session["end-date"] = end_date.strftime("%Y-%m-%dT%H:%M")
+    request.session["initial-date"] = initial_date.strftime("%Y-%m-%d")
+    request.session["end-date"] = end_date.strftime("%Y-%m-%d")
     return redirect(f"mostrarelatoriodia")
 
 
@@ -191,15 +196,16 @@ def estado(request):
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     obj = None
-     
-    voos_fields = [key.name for key in Voos._meta.fields]
-    print(voos_fields)
-    a = {}
+    error = None
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
         'obj': obj,
+        'error': '' if error is None else error,
     }
+    voos_fields = [key.name for key in Voos._meta.fields]
+    print(voos_fields)
+    a = {}
     if request.method == 'POST':
         voo = voos_qs.get()
         if request.POST.get("chegada_real") is not None:
@@ -207,11 +213,45 @@ def estado(request):
             if voo.chegada_prevista >  utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira datas válidas."
                 return render(request, 'estado.html', context)
+            try:
+                chegada_prevista = voo.chegada_prevista
+                companhia_aerea = voo.companhia_aerea
+                codigo = voo.codigo
+                origem = voo.origem
+            
+                chegada = {
+                    'companhia_aerea': companhia_aerea,
+                    'codigo': codigo,
+                    'origem': origem,
+                    'chegada_prevista': chegada_prevista,
+                    'chegada_real': utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")),
+                }
+            
+                obj = Chegadas.objects.create(**chegada)
+            except Exception as e:
+                error = e
         if request.POST.get("partida_real") is not None:
             utc=pytz.UTC
             if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira datas válidas."
                 return render(request, 'estado.html', context)
+            try:
+                partida_prevista = voo.partida_prevista
+                companhia_aerea = voo.companhia_aerea
+                codigo = voo.codigo
+                origem = voo.origem
+            
+                partida = {
+                    'companhia_aerea': companhia_aerea,
+                    'codigo': codigo,
+                    'origem': origem,
+                    'partida_prevista': partida_prevista,
+                    'partida_real': utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")),
+                }
+            
+                obj = Partidas.objects.create(**partida)
+            except Exception as e:
+                error = e
         for key in request.POST:
             if request.POST[key] == '':
                 continue
@@ -221,12 +261,13 @@ def estado(request):
         
         print(a)
         obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**a)
+        
     return render(request, 'estado.html', context)
 
 
 def mostrarelatoriodia(request):
-    initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%dT%H:%M")
-    end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%dT%H:%M")
+    initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%d")
+    end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%d")
 
     voos_filtered = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
 
@@ -252,5 +293,46 @@ def mostrarelatoriodia(request):
     return render(request, 'mostrarelatoriodia.html', context)
 
 def mostrarelatoriogeral(request):
-    context = {}
+    initial_date = datetime.strptime(request.session.get("initial-date"), "%Y-%m-%d")
+    end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%d")
+
+    voos_filtered = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
+
+    voos_cancelados = voos_filtered.filter(status="cancelado")
+    n_cancelados = len(voos_cancelados)
+    voos_finalizados = voos_filtered.filter(status="aterrissado")
+    n_finalizados = len(voos_finalizados)
+
+    voos_atrasados = len([voo for voo in voos_filtered.exclude(partida_real__isnull=True) if voo.partida_real > voo.partida_prevista])
+    voos_nao_atrasados = len(voos_filtered) - voos_atrasados
+
+    cia_finalizados_dict = {}
+    for voo in voos_finalizados:
+        if voo.companhia_aerea not in cia_finalizados_dict:
+            cia_finalizados_dict[voo.companhia_aerea] = 1
+        else:
+            cia_finalizados_dict[voo.companhia_aerea] += 1
+    cia_mais_finalizados = max(cia_finalizados_dict if len(cia_finalizados_dict) > 0 else {"":0}, key=cia_finalizados_dict.get) or ""
+    cia_finalizados = cia_finalizados_dict[cia_mais_finalizados]
+
+    cia_cancelados_dict = {}
+    for voo in voos_cancelados:
+        if voo.companhia_aerea not in cia_cancelados_dict:
+            cia_cancelados_dict[voo.companhia_aerea] = 1
+        else:
+            cia_cancelados_dict[voo.companhia_aerea] += 1
+    cia_mais_cancelados = max(cia_cancelados_dict if len(cia_cancelados_dict) > 0 else {"":0}, key=cia_cancelados_dict.get) or ""
+    cia_cancelados = cia_cancelados_dict[cia_mais_cancelados]
+
+    context = {
+        'finalizados' : n_finalizados,
+        'cancelados' : n_cancelados,
+        'atrasados' : voos_atrasados,
+        'nao_atrasados' : voos_nao_atrasados,
+        'companhia_mais_cancelados' : cia_mais_cancelados,
+        'companhia_mais_finalizados' : cia_mais_finalizados,
+        'mais_finalizados' : cia_finalizados,
+        'mais_cancelados' : cia_cancelados
+    }
+
     return render(request, 'mostrarelatoriogeral.html', context)

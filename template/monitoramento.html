@@ -38,9 +38,10 @@
     </nav>
 
     <h2>Monitoramento de Voos</h2>
+    <h3>Chegadas</h3>
     <div>
       <form method="get">
-        {{ voos_filter.form.as_p }}
+        {{ chegadas_filter.form }}
         <input type="submit" value="Pesquisar"/>
       </form>
 
@@ -49,21 +50,62 @@
           <table class="table">
             <thead class="thead-dark">
               <tr>
+                <th>Companhia Aérea</th>
                 <th>Código</th>
                 <th>Status</th>
+                <th>Chegada prevista</th>
+                <th>Chegada real</th>
               </tr>
             </thead>
             <tbody>
-              {% for voo in voos_qs %}
-                <tr>
-                  <th>{{voo.codigo}}</th>
-                  <th>{{voo.status}}</th>
+              {% for chegada in chegadas_qs %}
+                <tr>                  
+                  <th>{{chegada.companhia_aerea}}</th>
+                  <th>{{chegada.codigo}}</th>
+                  <th>{{chegada.status}}</th>
+                  <th>{{chegada.chegada_prevista}}</th>
+                  <th>{{chegada.chegada_real}}</th>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
       </div>
+      <h3>Partidas</h3>
+      <div>
+        <form method="get">
+          {{ partidas_filter.form.as_p }}
+          <input type="submit" value="Pesquisar"/>
+        </form>
+  
+        <div id="table-wrapper">
+          <div id="table-scroll">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Companhia Aerea</th>
+                  <th>Código</th>
+                  <th>Status</th>
+                  <th>Destino</th>
+                  <th>Partida Prevista</th>
+                  <th>Partida Real</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for partida in partidas_qs %}
+                  <tr>
+                    <th>{{partida.companhia_aerea}}</th>
+                    <th>{{partida.codigo}}</th>
+                    <th>{{partida.status}}</th>
+                    <th>{{partida.destino}}</th>
+                    <th>{{partida.partida_prevista}}</th>
+                    <th>{{partida.partida_real}}</th>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </a>
     </div>
 

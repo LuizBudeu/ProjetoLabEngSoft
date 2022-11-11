@@ -9,19 +9,6 @@
     <title>Relatório gerado</title>
     <link rel="stylesheet" href="{% static 'projeto/home.css'%}" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
-      #table-wrapper {
-        position:relative;
-      }
-      #table-scroll {
-        height:450px;
-        overflow:auto;  
-        margin-top:20px;
-      }
-      #table-wrapper table {
-        width:100%;
-      }
-      </style>
   </head>
   <body>
 
@@ -37,7 +24,49 @@
       </div>
     </nav>
 
-    
+    <div class="col-md-6">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Característica</th>
+            <th scope="col">Quantidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Voos finalizados</th>
+            <td>{{finalizados}}</td>
+          </tr>
+          <tr>
+            <th scope="row">Voos cancelados</th>
+            <td>{{cancelados}}</td>
+          </tr>
+          <tr>
+            <th scope="row">Voos atrasados</th>
+            <td>{{atrasados}}</td>
+          </tr>
+          <tr>
+            <th scope="row">Voos não atrasados</th>
+            <td>{{nao_atrasados}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <br/>
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <th scope="row">Companhia aérea com mais voos finalizados</th>
+            <td>{{companhia_mais_finalizados}}</td>
+            <td>(Voos finalizados: {{mais_finalizados}})</td>
+          </tr>
+          <tr>
+            <th scope="row">Companhia aérea com mais voos cancelados</th>
+            <td>{{companhia_mais_cancelados}}</td>
+            <td>(Voos cancelados: {{mais_cancelados}})</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>    
 
   </body>
 </html>
