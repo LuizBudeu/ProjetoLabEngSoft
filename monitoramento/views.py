@@ -246,12 +246,7 @@ def estado(request):
             except Exception as e:
                 error = e
                 print(error)
-        if request.POST.get("partida_real") is not None:
-            print("passei aqui")
-            utc=pytz.UTC
-            if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
-                context["error_msg"] = "Insira uma data válida."
-                return render(request, 'estado.html', context)
+        if request.POST.get("status") == "embarcando":
             try:
                 partida_prevista = voo.partida_prevista
                 companhia_aerea = voo.companhia_aerea
@@ -265,12 +260,17 @@ def estado(request):
                     'destino': destino,
                     'status': status,
                     'partida_prevista': partida_prevista,
-                    'partida_real': utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")),
                 }
                 print(partida)
                 obj = Partidas.objects.create(**partida)
             except Exception as e:
                 error = e
+        if request.POST.get("partida_real") is not None:
+            utc=pytz.UTC
+            if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
+                context["error_msg"] = "Insira uma data válida."
+                return render(request, 'estado.html', context)
+            obj = Partidas.objects.filter(codigo=voo.codigo).update(partida_real = datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M"))
         for key in request.POST:
             if request.POST[key] == '':
                 continue
@@ -295,7 +295,7 @@ def mostrarelatoriodia(request):
     voos_programados = voos_filtered.filter(status="programado")
     voos_autorizados = voos_filtered.filter(status="autorizado")
     voos_taxiando = voos_filtered.filter(status="taxiando")
-    voos_prontos = voos_filtered.filter(status="prontos")
+    voos_prontos = voos_filtered.filter(status="pronto")
     voos_em_andamento = voos_filtered.filter(status="em voo")
     voos_finalizados = voos_filtered.filter(status="aterrissado")
 
