@@ -37,7 +37,7 @@
         </ul>
       </div>
     </nav>
-
+    <div class="col-md-6">
     <h2>Atualização de estado</h2>
       <form method="get">
         {{ voos_filter.form.as_p }}
@@ -45,6 +45,7 @@
       </form>
     
       {% if voos_qs|length == 1 %}
+      <h4 style="color:rgb(36, 145, 3);">Voo Encontrado</h4>
       {% for voo in voos_qs %}
         {% if voo.status == "em voo" %}
           <div class="form-group col-md-3"></div>
@@ -102,5 +103,6 @@
       </form> 
       {% endfor %}
       {% endif %}
+    </div>
   </body>
 </html>
