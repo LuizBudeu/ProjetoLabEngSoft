@@ -282,7 +282,7 @@ def mostrarelatoriodia(request):
     voos_programados = voos_filtered.filter(status="programado")
     voos_autorizados = voos_filtered.filter(status="autorizado")
     voos_taxiando = voos_filtered.filter(status="taxiando")
-    voos_prontos = voos_filtered.filter(status="prontos")
+    voos_prontos = voos_filtered.filter(status="pronto")
     voos_em_andamento = voos_filtered.filter(status="em voo")
     voos_finalizados = voos_filtered.filter(status="aterrissado")
 
