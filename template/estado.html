@@ -46,10 +46,10 @@
     
       {% if voos_qs|length == 1 %}
       {% for voo in voos_qs %}
-      <form method="POST">
-        {% csrf_token %}
-        <div class="form-group col-md-3"> <!--TODO: Validar data de envio e status no backend-->
-          {% if voo.status == "taxiando" %}
+        {% if voo.status == "em voo" %}
+          <div class="form-group col-md-3"></div>
+          <form method="POST">
+            {% csrf_token %}
             <label for="partida_real">Partida real</label>
               <input
                 name="partida_real"
@@ -57,20 +57,26 @@
                 class="form-control"
                 placeholder="Partida real"
               />
+            <h4 style="color:rgb(255, 56, 56);">{{error_msg}}</h4>
+            <button type="submit" class="btn btn-secondary">Atualizar Data de partida</button>
+          </form>
           {% endif %}
           {% if voo.status == "aterrissado" %}
+          <div class="form-group col-md-3"></div>
+          <form method="POST">
+            {% csrf_token %}
             <label for="chegada_real">Chegada real</label>
-            <input
-              name="chegada_real"
-              type="datetime-local"
-              class="form-control"
-              placeholder="Chegada real"
-            />
+              <input
+                name="chegada_real"
+                type="datetime-local"
+                class="form-control"
+                placeholder="Chegada real"
+              />
+            <h4 style="color:rgb(255, 56, 56);">{{error_msg}}</h4>
+            <button type="submit" class="btn btn-secondary">Atualizar Data de chegada</button>
+          </form>
           {% endif %}
         </div>
-        {% if voo.status == "aterrissado" or voo.status == "taxiando" %}
-        <button type="submit" class="btn btn-secondary">Atualizar</button>
-        {% endif %}
       </form>
       <form method="POST">
         {% csrf_token %}
@@ -79,6 +85,7 @@
           {% if voo.status == null %}
           <option value="cancelado">cancelado</option>
           <option value="embarcando">embarcando</option>
+          <option value="aterrissado">aterrissado</option>
           {% elif  voo.status == "embarcando" %}
           <option value="programado">programado</option>
           {% elif  voo.status == "programado" %}
@@ -89,11 +96,9 @@
           <option value="autorizado">autorizado</option>
           {% elif  voo.status == "autorizado" %}
           <option value="em voo">em voo</option>
-          {% elif  voo.status == "em voo" %}
-          <option value="aterrissado">aterrissado</option>
           {% endif %}
         </select>
-        <button type="submit" class="btn btn-secondary">Atualizar</button>
+        <button type="submit" class="btn btn-secondary">Atualizar Estado</button>
       </form> 
       {% endfor %}
       {% endif %}
