@@ -152,7 +152,7 @@ def cruddelete(request):
 
     if request.method == 'POST':
         deleted = True
-        id = request.POST['id'] 
+        id = request.POST['id']  # TODO tratar erro de id nao ser numero
         obj = Voos.objects.filter(id=id).delete() 
     
     context = {
