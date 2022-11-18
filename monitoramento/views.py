@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
 from .filters import VoosFilter, PartidasFilter, ChegadasFilter
-import re
+from .extras import *
 import pytz
 
 
@@ -62,27 +62,19 @@ def crud(request):
 def crudcreate(request):  
     obj = None
     error = None
-
-    def parse_code(code):
-        result = re.search(r'^[A-Za-z]{2}[0-9]{4}$', code)
-        if result:
-            return result.group(0)
-        raise Exception(f'Código {code} no formato incorreto, use 2 letras e 4 números (ex: XX9999).')
-
-    def check_datetimes(chegada_prevista, partida_prevista):
-        if chegada_prevista > partida_prevista:
-            return chegada_prevista, partida_prevista
-        raise Exception('Partida prevista tem que ser após a chegada prevista.')
+    excs = []
     
     if request.method == 'POST':
-        try:
-            chegada_prevista = datetime.strptime(request.POST['chegada_prevista'], '%Y-%m-%dT%H:%M')
-            partida_prevista = datetime.strptime(request.POST['partida_prevista'], '%Y-%m-%dT%H:%M')
+        chegada_prevista = datetime.strptime(request.POST['chegada_prevista'], '%Y-%m-%dT%H:%M')
+        partida_prevista = datetime.strptime(request.POST['partida_prevista'], '%Y-%m-%dT%H:%M')
 
-            chegada_prevista, partida_prevista = check_datetimes(chegada_prevista, partida_prevista)
-            
-            codigo = parse_code(request.POST['codigo'])
+        partida_chegada_result = check_chegada_partida(chegada_prevista, partida_prevista, excs)
+        
+        codigo_result = parse_code(request.POST['codigo'], excs)
 
+        if codigo_result and partida_chegada_result:
+            chegada_prevista, partida_prevista = partida_chegada_result
+            codigo = codigo_result
             voo = {
                 'companhia_aerea': request.POST['companhia_aerea'],
                 'codigo': codigo,
@@ -92,13 +84,11 @@ def crudcreate(request):
                 'chegada_prevista': chegada_prevista,
             }
             obj = Voos.objects.create(**voo)
-
-        except Exception as e:
-            error = e
-
+    
     context = {
         'obj': '' if obj is None else obj,
         'error': '' if error is None else error,
+        'excs': excs,
     }
     return render(request, 'crud-create.html', context)
 
@@ -120,9 +110,10 @@ def crudupdate(request):
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     obj = None
+    error = None
+    excs = []
     
     voos_fields = [key.name for key in Voos._meta.fields]
-    print(voos_fields)
     fields = {}
 
     if request.method == 'POST':
@@ -131,13 +122,36 @@ def crudupdate(request):
                 continue
             if key in voos_fields:
                 fields[key] = request.POST[key]
-        
-        obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**fields)
-                
+
+        if codigo := fields.get('codigo'):
+            codigo_result = parse_code(codigo, excs)
+            fields['codigo'] = codigo_result
+
+        if fields.get('partida_prevista'):
+            partida_prevista = pytz.UTC.localize(datetime.strptime(fields.get('partida_prevista'), '%Y-%m-%dT%H:%M'))
+        else:
+            partida_prevista = Voos.objects.get(codigo=request.GET['codigo']).partida_prevista
+
+        if fields.get('chegada_prevista'):
+            chegada_prevista = pytz.UTC.localize(datetime.strptime(fields.get('chegada_prevista'), '%Y-%m-%dT%H:%M'))
+        else:
+            chegada_prevista = Voos.objects.get(codigo=request.GET['codigo']).chegada_prevista
+
+        chegada_partida_result = check_chegada_partida(chegada_prevista, partida_prevista, excs)
+            
+        if len(excs) == 0:
+            # codigo = codigo_result
+            chegada_prevista, partida_prevista = chegada_partida_result
+            fields['chegada_prevista'] = chegada_prevista
+            fields['partida_prevista'] = partida_prevista
+            obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**fields)
+                    
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
         'obj': obj,
+        'error': '' if error is None else error,
+        'excs': excs
     }
     return render(request, 'crud-update.html', context)
 
@@ -170,7 +184,6 @@ def monitoramento(request):
     chegadas_filter = ChegadasFilter(request.GET, queryset=chegadas_qs)
     chegadas_qs = chegadas_filter.qs
     partidas_qs = Partidas.objects.all()
-    print(partidas_qs)
     partidas_filter = PartidasFilter(request.GET, queryset=partidas_qs)
     partidas_qs = partidas_filter.qs
     context = {
@@ -245,32 +258,35 @@ def estado(request):
                 obj = Chegadas.objects.create(**chegada)
             except Exception as e:
                 error = e
-                print(error)
-        if request.POST.get("status") == "embarcando":
-            try:
-                partida_prevista = voo.partida_prevista
-                companhia_aerea = voo.companhia_aerea
-                codigo = voo.codigo
-                destino = voo.destino
-                status = voo.status
-
-                partida = {
-                    'companhia_aerea': companhia_aerea,
-                    'codigo': codigo,
-                    'destino': destino,
-                    'status': status,
-                    'partida_prevista': partida_prevista,
-                }
-                print(partida)
-                obj = Partidas.objects.create(**partida)
-            except Exception as e:
-                error = e
-        if request.POST.get("partida_real") is not None:
+                print(error)   
+        elif request.POST.get("partida_real") is not None:
             utc=pytz.UTC
             if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
             obj = Partidas.objects.filter(codigo=voo.codigo).update(partida_real = datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M"))
+        else:
+            if request.POST.get("status") == "embarcando":
+                try:
+                    partida_prevista = voo.partida_prevista
+                    companhia_aerea = voo.companhia_aerea
+                    codigo = voo.codigo
+                    destino = voo.destino
+                    status = voo.status
+
+                    partida = {
+                        'companhia_aerea': companhia_aerea,
+                        'codigo': codigo,
+                        'destino': destino,
+                        'status': status,
+                        'partida_prevista': partida_prevista,
+                    }
+                    print(partida)
+                    obj = Partidas.objects.create(**partida)
+                except Exception as e:
+                    error = e
+            if request.POST.get("status") != "aterrisando":
+                    obj = Partidas.objects.filter(codigo=voo.codigo).update(status= request.POST.get("status"))
         for key in request.POST:
             if request.POST[key] == '':
                 continue

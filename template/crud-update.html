@@ -136,5 +136,17 @@
       </div>
     {% endif %}
 
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+    {{error}}
+    </div>
+  {% endif %}
+
+  {% for exc in excs %}
+    <div class="alert alert-danger" role="alert">
+    {{exc}}
+    </div>
+  {% endfor %}
+
   </body>
 </html>
