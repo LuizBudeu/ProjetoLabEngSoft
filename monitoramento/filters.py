@@ -7,7 +7,7 @@ class VoosFilter(django_filters.FilterSet):  # TODO mudar fields para id?
 
     class Meta:
         model = Voos
-        fields = ['codigo', 'id']
+        fields = ['codigo']
 
 class ChegadasFilter(django_filters.FilterSet):
     # codigo = django_filters.CharFilter(lookup_expr='iexact')

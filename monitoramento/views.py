@@ -62,17 +62,30 @@ def crud(request):
 def crudcreate(request):  
     obj = None
     error = None
+
+    def parse_code(code):
+        result = re.search(r'^[A-Za-z]{2}[0-9]{4}$', code)
+        if result:
+            return result.group(0)
+        raise Exception(f'Código {code} no formato incorreto, use 2 letras e 4 números (ex: XX9999).')
+
+    def check_datetimes(chegada_prevista, partida_prevista):
+        if chegada_prevista > partida_prevista:
+            return chegada_prevista, partida_prevista
+        raise Exception('Partida prevista tem que ser após a chegada prevista.')
     
     if request.method == 'POST':
         try:
             chegada_prevista = datetime.strptime(request.POST['chegada_prevista'], '%Y-%m-%dT%H:%M')
             partida_prevista = datetime.strptime(request.POST['partida_prevista'], '%Y-%m-%dT%H:%M')
+
+            chegada_prevista, partida_prevista = check_datetimes(chegada_prevista, partida_prevista)
             
-            # TODO parsear codigo
-            
+            codigo = parse_code(request.POST['codigo'])
+
             voo = {
                 'companhia_aerea': request.POST['companhia_aerea'],
-                'codigo': request.POST['codigo'],
+                'codigo': codigo,
                 'origem': request.POST['origem'],
                 'destino': request.POST['destino'],
                 'partida_prevista': partida_prevista,
@@ -119,7 +132,7 @@ def crudupdate(request):
             if key in voos_fields:
                 fields[key] = request.POST[key]
         
-        obj = Voos.objects.filter(id=request.GET['id']).update(**fields)
+        obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**fields)
                 
     context = {
         'voos_filter': voos_filter,
