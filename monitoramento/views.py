@@ -156,7 +156,8 @@ def monitoramento(request):
     chegadas_qs = Chegadas.objects.all()
     chegadas_filter = ChegadasFilter(request.GET, queryset=chegadas_qs)
     chegadas_qs = chegadas_filter.qs
-    partidas_qs = Chegadas.objects.all()
+    partidas_qs = Partidas.objects.all()
+    print(partidas_qs)
     partidas_filter = PartidasFilter(request.GET, queryset=partidas_qs)
     partidas_qs = partidas_filter.qs
     context = {
@@ -211,14 +212,15 @@ def estado(request):
         if request.POST.get("chegada_real") is not None:
             utc=pytz.UTC
             if voo.chegada_prevista >  utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
-                context["error_msg"] = "Insira datas válidas."
+                context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
             try:
                 chegada_prevista = voo.chegada_prevista
                 companhia_aerea = voo.companhia_aerea
                 codigo = voo.codigo
                 origem = voo.origem
-            
+                status = voo.status
+
                 chegada = {
                     'companhia_aerea': companhia_aerea,
                     'codigo': codigo,
@@ -226,29 +228,33 @@ def estado(request):
                     'chegada_prevista': chegada_prevista,
                     'chegada_real': utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")),
                 }
-            
+
                 obj = Chegadas.objects.create(**chegada)
             except Exception as e:
                 error = e
+                print(error)
         if request.POST.get("partida_real") is not None:
+            print("passei aqui")
             utc=pytz.UTC
             if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
-                context["error_msg"] = "Insira datas válidas."
+                context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
             try:
                 partida_prevista = voo.partida_prevista
                 companhia_aerea = voo.companhia_aerea
                 codigo = voo.codigo
-                origem = voo.origem
-            
+                destino = voo.destino
+                status = voo.status
+
                 partida = {
                     'companhia_aerea': companhia_aerea,
                     'codigo': codigo,
-                    'origem': origem,
+                    'destino': destino,
+                    'status': status,
                     'partida_prevista': partida_prevista,
                     'partida_real': utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")),
                 }
-            
+                print(partida)
                 obj = Partidas.objects.create(**partida)
             except Exception as e:
                 error = e
