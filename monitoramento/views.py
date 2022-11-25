@@ -237,7 +237,7 @@ def estado(request):
     a = {}
     if request.method == 'POST':
         voo = voos_qs.get()
-        if request.POST.get("chegada_real") is not None:
+        if request.POST.get("chegada_real") is not None and voo.destino == "São Paulo":
             utc=pytz.UTC
             if voo.chegada_prevista >  utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira uma data válida."
@@ -261,7 +261,7 @@ def estado(request):
             except Exception as e:
                 error = e
                 print(error)   
-        elif request.POST.get("partida_real") is not None:
+        elif request.POST.get("partida_real") is not None and voo.origem == "São Paulo":
             utc=pytz.UTC
             if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira uma data válida."
