@@ -31,15 +31,22 @@
     <h1 style="text-align: center">Atualizar dados de um Voo</h1>
 
     <div>
-      <p style="padding-left:5px"><b>Selecionar</b> voo com código:</p>
+      <p style="padding-left:5px"><b>Selecionar</b> voo com código: (É necessário selecionar um código para atualizar)</p>
       <form method="get">
         <div class="form-group col-md-1">
           {% render_field voos_filter.form.codigo class="form-control" %}
+          <br/>
           <button class="btn btn-primary" type="submit">
             Enter
           </button>
       </form>
       </div>
+
+      {% if error_codigo %}
+      <div class="alert alert-danger" role="alert">
+        Não foi possível encontrar voo com código <b>{{codigo}}</b>
+      </div>
+    {% endif %}
 
       <div id="table-wrapper">
         <div id="table-scroll">
@@ -90,13 +97,6 @@
           class="form-control"
           placeholder="Companhia Aérea"
         />
-        <label for="codigo">Código</label>
-        <input
-          name="codigo"
-          type="text"
-          class="form-control"
-          placeholder="Código"
-        />
         <label for="origem">Origem</label>
         <input
           name="origem"
@@ -125,9 +125,10 @@
           class="form-control"
           placeholder="Chegada prevista"
         />
+        <br/>
+        <button type="submit" class="btn btn-secondary">Atualizar</button>
       </div>
 
-      <button type="submit" class="btn btn-secondary">Atualizar</button>
     </form>
     
     {% if obj %}

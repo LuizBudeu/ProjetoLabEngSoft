@@ -69,6 +69,9 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if voos_cancelados|length == 0 %}
+          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+        {% endif %}
       </div>
     </div>
 
@@ -104,6 +107,9 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if voos_embarcando|length == 0 %}
+          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+        {% endif %}
       </div>
     </div>
 
@@ -139,6 +145,9 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if voos_programados|length == 0 %}
+          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+        {% endif %}
       </div>
     </div>
 
@@ -174,6 +183,9 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if voos_autorizados|length == 0 %}
+          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+        {% endif %}
       </div>
     </div>
 
@@ -209,6 +221,9 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if voos_taxiando|length == 0 %}
+          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+        {% endif %}
       </div>
     </div>
 
@@ -244,6 +259,9 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if voos_prontos|length == 0 %}
+          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+        {% endif %}
       </div>
     </div>
 
@@ -279,6 +297,9 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if voos_em_andamento|length == 0 %}
+          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+        {% endif %}
       </div>
     </div>
 
@@ -314,6 +335,9 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if voos_finalizados|length == 0 %}
+          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+        {% endif %}
       </div>
     </div>
   </body>
