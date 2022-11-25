@@ -35,6 +35,7 @@
       <form method="get">
         <div class="form-group col-md-1">
           {% render_field voos_filter.form.codigo class="form-control" %}
+          <br/>
           <button class="btn btn-primary" type="submit">
             Enter
           </button>
@@ -125,9 +126,10 @@
           class="form-control"
           placeholder="Chegada prevista"
         />
+        <br/>
+        <button type="submit" class="btn btn-secondary">Atualizar</button>
       </div>
 
-      <button type="submit" class="btn btn-secondary">Atualizar</button>
     </form>
     
     {% if obj %}
