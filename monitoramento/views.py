@@ -15,16 +15,16 @@ def login(request):
     global tries
     context = {}
     logins = {
-        'felipe' : {
-            'password': 'felipe',
+        'gerente' : {
+            'password': 'gerente',
             'permission': 'relatorio'
         },
-        'gabriel' : {
-            'password': 'gabriel',
+        'funcionario' : {
+            'password': 'funcionario',
             'permission': 'monitoramento'
         },
-        'luiz' : {
-            'password': 'luiz',
+        'operadorvoo' : {
+            'password': 'operadorvoo',
             'permission': 'crud'
         },
         'admin': {
@@ -135,10 +135,6 @@ def crudupdate(request):
                 continue
             if key in voos_fields:
                 fields[key] = request.POST[key]
-
-        if codigo := fields.get('codigo'):
-            codigo_result = parse_code(codigo, excs)
-            fields['codigo'] = codigo_result
 
         if fields.get('partida_prevista'):
             partida_prevista = pytz.UTC.localize(datetime.strptime(fields.get('partida_prevista'), '%Y-%m-%dT%H:%M'))
