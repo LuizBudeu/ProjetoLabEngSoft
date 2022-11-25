@@ -54,12 +54,12 @@ python manage.py runserver
 
 8. Para acessar a página principal, utilize um dos seguintes dados de login e senha a seguir. Cada um contém um tipo diferente de autorização para acessar as funcionalidades do Sistema:
 
-| Nome de usuário | senha   | Acesso                     |
-| --------------- | ------- | -------------------------- |
-| luiz            | luiz    | Controle de Dados de Voos  |
-| gabriel         | gabriel | Monitoramento de voos      |
-| felipe          | felipe  | Gerar Relatórios           |
-| admin           | admin   | Acesso geral               |
+| Nome de usuário | Senha       | Acesso                    |
+| --------------- | ----------- | ------------------------- |
+| operadorvoo     | operadorvoo | Controle de Dados de Voos |
+| funcionario     | funcionario | Monitoramento de voos     |
+| gerente         | gerente     | Gerar Relatórios          |
+| admin           | admin       | Acesso geral              |
 
 9. Após o login, está a tela "Home", contendo botões que direcionam a diferentes telas da interface do Sistema. Há também o botão "Sair", que retorna o usuário à tela de login.
 
