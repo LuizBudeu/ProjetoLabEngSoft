@@ -65,11 +65,13 @@ def crudcreate(request):
     excs = []
     
     if request.method == 'POST':
-        chegada_prevista = datetime.strptime(request.POST['chegada_prevista'], '%Y-%m-%dT%H:%M')
-        partida_prevista = datetime.strptime(request.POST['partida_prevista'], '%Y-%m-%dT%H:%M')
+        if request.POST['chegada_prevista'] and request.POST['partida_prevista']:
+            chegada_prevista = datetime.strptime(request.POST['chegada_prevista'], '%Y-%m-%dT%H:%M')
+            partida_prevista = datetime.strptime(request.POST['partida_prevista'], '%Y-%m-%dT%H:%M')
+            partida_chegada_result = check_chegada_partida(chegada_prevista, partida_prevista, excs)
+        else:
+            excs.append(Exception('Partida prevista e chegada prevista têm que estar preenchidas.'))
 
-        partida_chegada_result = check_chegada_partida(chegada_prevista, partida_prevista, excs)
-        
         codigo_result = parse_code(request.POST['codigo'], excs)
 
         if codigo_result and partida_chegada_result:
