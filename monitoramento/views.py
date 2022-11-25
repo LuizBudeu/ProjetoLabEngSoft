@@ -99,10 +99,16 @@ def crudread(request):
     voos_qs = Voos.objects.all()
     voos_filter = VoosFilter(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
+    error = False
+
+    if len(voos_qs) == 0:
+        error = True
 
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
+        'error': error,
+        'codigo': request.GET.get('codigo')
     }
     return render(request, 'crud-read.html', context)
 
@@ -113,7 +119,12 @@ def crudupdate(request):
     voos_qs = voos_filter.qs
     obj = None
     error = None
+    error_codigo = False
     excs = []
+    print(len(voos_qs), request.GET.get('codigo'))
+
+    if len(voos_qs) == 0 and request.GET.get('codigo'):
+        error_codigo = True
     
     voos_fields = [key.name for key in Voos._meta.fields]
     fields = {}
@@ -142,7 +153,6 @@ def crudupdate(request):
         chegada_partida_result = check_chegada_partida(chegada_prevista, partida_prevista, excs)
             
         if len(excs) == 0:
-            # codigo = codigo_result
             chegada_prevista, partida_prevista = chegada_partida_result
             fields['chegada_prevista'] = chegada_prevista
             fields['partida_prevista'] = partida_prevista
@@ -153,7 +163,9 @@ def crudupdate(request):
         'voos_qs': voos_qs,
         'obj': obj,
         'error': '' if error is None else error,
-        'excs': excs
+        'excs': excs,
+        'error_codigo': error_codigo,
+        'codigo': request.GET.get('codigo')
     }
     return render(request, 'crud-update.html', context)
 
@@ -165,16 +177,20 @@ def cruddelete(request):
     id = None
     obj = None
     deleted = False
+    codigo = None
 
     if request.method == 'POST':
         deleted = True
-        id = request.POST['id']  # TODO tratar erro de id nao ser numero
-        obj = Voos.objects.filter(id=id).delete() 
+        # id = request.POST['id']  # TODO tratar erro de id nao ser numero
+        # obj = Voos.objects.filter(id=id).delete() 
+        codigo = request.POST['codigo']
+        obj = Voos.objects.filter(codigo=codigo).delete()
     
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
-        'id': id,
+        # 'id': id,
+        'codigo': codigo,
         'obj': obj,
         'error': True if deleted and not obj[1] else False,
     }

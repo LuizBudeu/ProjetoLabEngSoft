@@ -49,6 +49,12 @@
         </form>
       </p>
 
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        Não foi possível encontrar voo com código <b>{{codigo}}</b>
+      </div>
+    {% endif %}
+
       <div id="table-wrapper">
         <div id="table-scroll">
           <table class="table">
