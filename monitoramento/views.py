@@ -231,7 +231,7 @@ def estado(request):
         'error': '' if error is None else error,
     }
     voos_fields = [key.name for key in Voos._meta.fields]
-    print(voos_fields)
+    print(Partidas.objects.all())
     a = {}
     if request.method == 'POST':
         voo = voos_qs.get()
@@ -272,7 +272,7 @@ def estado(request):
                     companhia_aerea = voo.companhia_aerea
                     codigo = voo.codigo
                     destino = voo.destino
-                    status = voo.status
+                    status = "embarcando"
 
                     partida = {
                         'companhia_aerea': companhia_aerea,
@@ -281,6 +281,7 @@ def estado(request):
                         'status': status,
                         'partida_prevista': partida_prevista,
                     }
+                    print("passei aqui")
                     print(partida)
                     obj = Partidas.objects.create(**partida)
                 except Exception as e:
