@@ -253,33 +253,33 @@ def estado(request):
             if voo.chegada_prevista >  utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
-            try:
+            obj = Chegadas.objects.filter(codigo=voo.codigo).update(chegada_real = datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M"))
+        elif request.POST.get("status") == "aterrissado" and voo.destino == "São Paulo":
+            try:    
                 chegada_prevista = voo.chegada_prevista
                 companhia_aerea = voo.companhia_aerea
                 codigo = voo.codigo
                 origem = voo.origem
-                status = voo.status
 
                 chegada = {
                     'companhia_aerea': companhia_aerea,
                     'codigo': codigo,
                     'origem': origem,
                     'chegada_prevista': chegada_prevista,
-                    'chegada_real': utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")),
                 }
 
                 obj = Chegadas.objects.create(**chegada)
             except Exception as e:
                 error = e
                 print(error)   
-        elif request.POST.get("partida_real") is not None and voo.origem == "São Paulo":
+        elif request.POST.get("partida_real") is not None:
             utc=pytz.UTC
             if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
             obj = Partidas.objects.filter(codigo=voo.codigo).update(partida_real = datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M"))
         else:
-            if request.POST.get("status") == "embarcando":
+            if request.POST.get("status") == "embarcando" and voo.origem == "São Paulo":
                 try:
                     partida_prevista = voo.partida_prevista
                     companhia_aerea = voo.companhia_aerea
