@@ -35,24 +35,28 @@ python -m venv env
 ```
 /env/Scripts/Activate.ps1
 ```
+5. Vá para a pasta do projeto
+```
+cd ProjetoLabEngSoft
+```
 
 Caso haja algum erro no processo de rodar o comando, tal como o computador não conseguir achar o path para o arquivo Activate.ps1, você pode encontrá-lo manualmente na pasta 'Scripts' do ambiente virtual do repositório e copiar seu path absoluto. Feito isso, é possível colar diretamente o path para o terminal para ativar o ambiente.
 
-5. Baixar as dependências do projeto com o comando:
+6. Baixar as dependências do projeto com o comando:
 
 ```
 pip install -r requirements.txt
 ```
 
-6. Com o ambiente ativo, para começar o webserver, rodar o comando:
+7. Com o ambiente ativo, para começar o webserver, rodar o comando:
 
 ```
 python manage.py runserver
 ```
 
-7. Acesse o endereço `localhost:8000/login` em seu navegador de preferência para visualizar a página de login.
+8. Acesse o endereço `localhost:8000/login` em seu navegador de preferência para visualizar a página de login.
 
-8. Para acessar a página principal, utilize um dos seguintes dados de login e senha a seguir. Cada um contém um tipo diferente de autorização para acessar as funcionalidades do Sistema:
+9. Para acessar a página principal, utilize um dos seguintes dados de login e senha a seguir. Cada um contém um tipo diferente de autorização para acessar as funcionalidades do Sistema:
 
 | Nome de usuário | Senha       | Acesso                    |
 | --------------- | ----------- | ------------------------- |
@@ -61,11 +65,11 @@ python manage.py runserver
 | gerente         | gerente     | Gerar Relatórios          |
 | admin           | admin       | Acesso geral              |
 
-9. Após o login, está a tela "Home", contendo botões que direcionam a diferentes telas da interface do Sistema. Há também o botão "Sair", que retorna o usuário à tela de login.
+10. Após o login, está a tela "Home", contendo botões que direcionam a diferentes telas da interface do Sistema. Há também o botão "Sair", que retorna o usuário à tela de login.
 
 ## Roteiro de Execução de Testes (CRUD)
 
-1. Seguir o passo-a-passo anterior (passo 1 até o passo 5) para clonar o repositório, criar e ativar o ambiente virtual e baixar as dependências.
+1. Seguir o passo-a-passo anterior (passo 1 até o passo 6) para clonar o repositório, criar e ativar o ambiente virtual e baixar as dependências.
 
 2. Aplicar as migrações (criar banco de dados):
 
