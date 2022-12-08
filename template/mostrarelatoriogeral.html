@@ -24,8 +24,13 @@
       </div>
     </nav>
 
-    <div class="col-md-6">
-      <table class="table">
+    <div class="col-lg">
+      <h2>Relatório - voos de {{data_inicio}} até {{data_fim}}</h2>
+    </div>
+    <br/>
+
+    <div class="col-md-4">
+      <table class="table table-hover">
         <thead>
           <tr>
             <th scope="col">Característica</th>
@@ -49,9 +54,20 @@
             <th scope="row">Voos não atrasados</th>
             <td>{{nao_atrasados}}</td>
           </tr>
+          <tr>
+            <th scope="row">Número de partidas</th>
+            <td>{{partidas}}</td>
+          </tr>
+          <tr>
+            <th scope="row">Número de chegadas</th>
+            <td>{{chegadas}}</td>
+          </tr>
         </tbody>
       </table>
-      <br/>
+    </div>    
+    <br/>
+    
+    <div class="col-md-8">
       <table class="table table-borderless">
         <tbody>
           <tr>
@@ -66,7 +82,7 @@
           </tr>
         </tbody>
       </table>
-    </div>    
+    </div>
 
   </body>
 </html>

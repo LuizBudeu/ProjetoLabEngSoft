@@ -338,6 +338,7 @@ def mostrarelatoriodia(request):
         'voos_prontos': voos_prontos,
         'voos_em_andamento': voos_em_andamento,
         'voos_finalizados': voos_finalizados,
+        'hoje': datetime.now().date().strftime("%d/%m/%Y")
     }
     return render(request, 'mostrarelatoriodia.html', context)
 
@@ -346,6 +347,8 @@ def mostrarelatoriogeral(request):
     end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%d")
 
     voos_filtered = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
+    n_partidas = len(Partidas.objects.filter(partida_real__gte=initial_date, partida_real__lte=end_date))
+    n_chegadas = len(Chegadas.objects.filter(chegada_real__gte=initial_date, chegada_real__lte=end_date))
 
     voos_cancelados = voos_filtered.filter(status="cancelado")
     n_cancelados = len(voos_cancelados)
@@ -361,8 +364,8 @@ def mostrarelatoriogeral(request):
             cia_finalizados_dict[voo.companhia_aerea] = 1
         else:
             cia_finalizados_dict[voo.companhia_aerea] += 1
-    cia_mais_finalizados = max(cia_finalizados_dict if len(cia_finalizados_dict) > 0 else {"":0}, key=cia_finalizados_dict.get) or ""
-    cia_finalizados = cia_finalizados_dict[cia_mais_finalizados]
+    cia_mais_finalizados = max(cia_finalizados_dict if len(cia_finalizados_dict) > 0 else {"":0}, key=cia_finalizados_dict.get) or "(Nenhuma)"
+    cia_finalizados = cia_finalizados_dict.get(cia_mais_finalizados) or "0"
 
     cia_cancelados_dict = {}
     for voo in voos_cancelados:
@@ -370,8 +373,8 @@ def mostrarelatoriogeral(request):
             cia_cancelados_dict[voo.companhia_aerea] = 1
         else:
             cia_cancelados_dict[voo.companhia_aerea] += 1
-    cia_mais_cancelados = max(cia_cancelados_dict if len(cia_cancelados_dict) > 0 else {"":0}, key=cia_cancelados_dict.get) or ""
-    cia_cancelados = cia_cancelados_dict[cia_mais_cancelados]
+    cia_mais_cancelados = max(cia_cancelados_dict if len(cia_cancelados_dict) > 0 else {"":0}, key=cia_cancelados_dict.get) or "(Nenhuma)"
+    cia_cancelados = cia_cancelados_dict.get(cia_mais_cancelados) or "0"
 
     context = {
         'finalizados' : n_finalizados,
@@ -381,7 +384,11 @@ def mostrarelatoriogeral(request):
         'companhia_mais_cancelados' : cia_mais_cancelados,
         'companhia_mais_finalizados' : cia_mais_finalizados,
         'mais_finalizados' : cia_finalizados,
-        'mais_cancelados' : cia_cancelados
+        'mais_cancelados' : cia_cancelados,
+        'data_inicio' : initial_date.strftime("%d/%m/%Y"),
+        'data_fim' : end_date.strftime("%d/%m/%Y"),
+        'partidas' : n_partidas,
+        'chegadas' : n_chegadas
     }
 
     return render(request, 'mostrarelatoriogeral.html', context)

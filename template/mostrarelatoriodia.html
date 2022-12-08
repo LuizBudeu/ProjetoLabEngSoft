@@ -37,7 +37,10 @@
       </div>
     </nav>
 
-    <h1> Voos cancelados</h1>
+    <h1 style="text-align: center;"> Relatório de voos do dia {{hoje}} </h1>
+    <br/>
+
+    <h2 style="text-align: center"> Voos cancelados </h2>
 
     <div id="table-wrapper">
       <div id="table-scroll">
@@ -70,12 +73,12 @@
           </tbody>
         </table>
         {% if voos_cancelados|length == 0 %}
-          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+          <h4 style="color: rgb(255, 103, 103); text-align: center;">(Não há voos nessa categoria.)</h4>
         {% endif %}
       </div>
     </div>
 
-    <h1> Voos embarcando</h1>
+    <h2 style="text-align: center"> Voos embarcando </h2>
 
     <div id="table-wrapper">
       <div id="table-scroll">
@@ -108,12 +111,12 @@
           </tbody>
         </table>
         {% if voos_embarcando|length == 0 %}
-          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+          <h4 style="color: rgb(255, 103, 103); text-align: center;">(Não há voos nessa categoria.)</h4>
         {% endif %}
       </div>
     </div>
 
-    <h1> Voos programados</h1>
+    <h2 style="text-align: center"> Voos programados </h2>
 
     <div id="table-wrapper">
       <div id="table-scroll">
@@ -146,12 +149,12 @@
           </tbody>
         </table>
         {% if voos_programados|length == 0 %}
-          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+          <h4 style="color: rgb(255, 103, 103); text-align: center;">(Não há voos nessa categoria.)</h4>
         {% endif %}
       </div>
     </div>
 
-    <h1> Voos autorizados</h1>
+    <h2 style="text-align: center"> Voos autorizados </h2>
 
     <div id="table-wrapper">
       <div id="table-scroll">
@@ -184,12 +187,12 @@
           </tbody>
         </table>
         {% if voos_autorizados|length == 0 %}
-          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+          <h4 style="color: rgb(255, 103, 103); text-align: center;">(Não há voos nessa categoria.)</h4>
         {% endif %}
       </div>
     </div>
 
-    <h1> Voos taxiando</h1>
+    <h2 style="text-align: center"> Voos taxiando </h2>
 
     <div id="table-wrapper">
       <div id="table-scroll">
@@ -222,12 +225,12 @@
           </tbody>
         </table>
         {% if voos_taxiando|length == 0 %}
-          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+          <h4 style="color: rgb(255, 103, 103); text-align: center;">(Não há voos nessa categoria.)</h4>
         {% endif %}
       </div>
     </div>
 
-    <h1> Voos prontos</h1>
+    <h2 style="text-align: center"> Voos prontos </h2>
 
     <div id="table-wrapper">
       <div id="table-scroll">
@@ -260,12 +263,12 @@
           </tbody>
         </table>
         {% if voos_prontos|length == 0 %}
-          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+          <h4 style="color: rgb(255, 103, 103); text-align: center;">(Não há voos nessa categoria.)</h4>
         {% endif %}
       </div>
     </div>
 
-    <h1> Voos em andamento</h1>
+    <h2 style="text-align: center"> Voos em andamento </h2>
 
     <div id="table-wrapper">
       <div id="table-scroll">
@@ -298,12 +301,12 @@
           </tbody>
         </table>
         {% if voos_em_andamento|length == 0 %}
-          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+          <h4 style="color: rgb(255, 103, 103); text-align: center;">(Não há voos nessa categoria.)</h4>
         {% endif %}
       </div>
     </div>
 
-    <h1> Voos finalizados</h1>
+    <h2 style="text-align: center"> Voos finalizados </h2>
 
     <div id="table-wrapper">
       <div id="table-scroll">
@@ -336,7 +339,7 @@
           </tbody>
         </table>
         {% if voos_finalizados|length == 0 %}
-          <h4 style="color: rgb(255, 103, 103);">(Não há voos nessa categoria.)</h4>
+          <h4 style="color: rgb(255, 103, 103); text-align: center;">(Não há voos nessa categoria.)</h4>
         {% endif %}
       </div>
     </div>
