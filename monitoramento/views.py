@@ -301,17 +301,17 @@ def estado(request):
                 return render(request, 'estado.html', context)
             obj = Partidas.objects.filter(codigo=voo.codigo).update(partida_real = datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M"))
         else:
-            if request.POST.get("status") != "aterrisando":
-                    obj = Partidas.objects.filter(codigo=voo.codigo).update(status= request.POST.get("status"))
+            if request.POST.get("status") != "aterrissado":
+                obj = Partidas.objects.filter(codigo=voo.codigo).update(status= request.POST.get("status"))
+            else:
+                obj = Chegadas.objects.filter(codigo=voo.codigo).update(status= request.POST.get("status"))
         for key in request.POST:
             if request.POST[key] == '':
                 continue
             if key in voos_fields:
                 print(key)
                 a[key] = request.POST[key]
-        
-        print(a)
-        obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**a)
+        obj = Voos.objects.filter(codigo=voo.codigo).update(**a)
         
     return render(request, 'estado.html', context)
 
