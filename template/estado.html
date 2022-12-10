@@ -47,7 +47,7 @@
       {% if voos_qs|length == 1 %}
       <h4 style="color:rgb(36, 145, 3);">Voo Encontrado</h4>
       {% for voo in voos_qs %}
-        {% if voo.status == "em voo" %}
+        {% if voo.status == "em voo" and voo.destino != "São Paulo" %}
           <div class="form-group col-md-3"></div>
           <form method="POST">
             {% csrf_token %}
@@ -83,20 +83,25 @@
         {% csrf_token %}
         <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="status">
           <option selected>{{voo.status}}</option>
-          {% if voo.status == null %}
-          <option value="cancelado">cancelado</option>
-          <option value="embarcando">embarcando</option>
-          <option value="aterrissado">aterrissado</option>
-          {% elif  voo.status == "embarcando" %}
-          <option value="programado">programado</option>
-          {% elif  voo.status == "programado" %}
-          <option value="taxiando">taxiando</option>
-          {% elif  voo.status == "taxiando" %}
-          <option value="pronto">pronto</option>
-          {% elif  voo.status == "pronto" %}
-          <option value="autorizado">autorizado</option>
-          {% elif  voo.status == "autorizado" %}
-          <option value="em voo">em voo</option>
+          {% if voo.destino != "São Paulo" %}
+            {% if voo.status == null %}
+            <option value="cancelado">cancelado</option>
+            <option value="embarcando">embarcando</option>
+            {% elif  voo.status == "embarcando" %}
+            <option value="programado">programado</option>
+            {% elif  voo.status == "programado" %}
+            <option value="taxiando">taxiando</option>
+            {% elif  voo.status == "taxiando" %}
+            <option value="pronto">pronto</option>
+            {% elif  voo.status == "pronto" %}
+            <option value="autorizado">autorizado</option>
+            {% elif  voo.status == "autorizado" %}
+            <option value="em voo">em voo</option>
+            {% endif %}
+          {% else %}
+            {% if voo.status == "em voo" %}
+            <option value="aterrissado">aterrissado</option>
+            {% endif %}
           {% endif %}
         </select>
         <button type="submit" class="btn btn-secondary">Atualizar Estado</button>
