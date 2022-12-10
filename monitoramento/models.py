@@ -51,9 +51,19 @@ class Partidas(models.Model):
 
 
 class Chegadas(models.Model):
-
+    STATUS_CHOICES = (
+        ('embarcando', 'embarcando'), 
+        ('cancelado', 'cancelado'), 
+        ('programado', 'programado'), 
+        ('taxiando', 'taxiando'), 
+        ('pronto', 'pronto'), 
+        ('autorizado', 'autorizado'), 
+        ('em voo', 'em voo'), 
+        ('aterrissado', 'aterrissado'),
+    )
     codigo = models.CharField(max_length=6, blank=False)  # codigo precisa ser 2 letras e 4 números (XX1111)
     companhia_aerea = models.CharField(max_length=100, blank=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=True, null=True)
     origem = models.CharField(max_length=100, blank=False)
     chegada_prevista = models.DateTimeField(blank=False)
     chegada_real = models.DateTimeField(blank=True, null=True)

@@ -65,27 +65,67 @@ def crudcreate(request):
     excs = []
     
     if request.method == 'POST':
-        if request.POST['chegada_prevista'] and request.POST['partida_prevista']:
-            chegada_prevista = datetime.strptime(request.POST['chegada_prevista'], '%Y-%m-%dT%H:%M')
-            partida_prevista = datetime.strptime(request.POST['partida_prevista'], '%Y-%m-%dT%H:%M')
-            partida_chegada_result = check_chegada_partida(chegada_prevista, partida_prevista, excs)
+        if request.POST['origem'] == "São Paulo" or request.POST['destino'] == "São Paulo":
+            if request.POST['chegada_prevista'] and request.POST['partida_prevista']:
+                chegada_prevista = datetime.strptime(request.POST['chegada_prevista'], '%Y-%m-%dT%H:%M')
+                partida_prevista = datetime.strptime(request.POST['partida_prevista'], '%Y-%m-%dT%H:%M')
+                partida_chegada_result = check_chegada_partida(chegada_prevista, partida_prevista, excs)
+            else:
+                excs.append(Exception('Partida prevista e chegada prevista têm que estar preenchidas.'))
+
+            codigo_result = parse_code(request.POST['codigo'], excs)
+
+            if codigo_result and partida_chegada_result:
+                chegada_prevista, partida_prevista = partida_chegada_result
+                codigo = codigo_result
+                origem = request.POST['origem']
+                destino = request.POST['destino']
+                status = 'em voo'
+                companhia_aerea = request.POST['companhia_aerea']
+                if request.POST['destino'] == "São Paulo":
+                    try:    
+                        chegada = {
+                            'companhia_aerea': companhia_aerea,
+                            'codigo': codigo,
+                            'status': status,
+                            'origem': origem,
+                            'chegada_prevista': chegada_prevista,
+                        }
+                        obj = Chegadas.objects.create(**chegada)
+                        voo = {
+                            'companhia_aerea': companhia_aerea,
+                            'codigo': codigo,
+                            'origem': origem,
+                            'status': status,
+                            'destino': destino,
+                            'partida_prevista': partida_prevista,
+                            'chegada_prevista': chegada_prevista,
+                        }
+                    except Exception as e:
+                        error = e
+                        print(error) 
+                else:
+                    try:
+                        partida = {
+                            'companhia_aerea': companhia_aerea,
+                            'codigo': codigo,
+                            'destino': destino,
+                            'partida_prevista': partida_prevista,
+                        }
+                        obj = Partidas.objects.create(**partida)
+                        voo = {
+                            'companhia_aerea': companhia_aerea,
+                            'codigo': codigo,
+                            'origem': origem,
+                            'destino': destino,
+                            'partida_prevista': partida_prevista,
+                            'chegada_prevista': chegada_prevista,
+                        }
+                    except Exception as e:
+                        error = e
+                obj = Voos.objects.create(**voo)
         else:
-            excs.append(Exception('Partida prevista e chegada prevista têm que estar preenchidas.'))
-
-        codigo_result = parse_code(request.POST['codigo'], excs)
-
-        if codigo_result and partida_chegada_result:
-            chegada_prevista, partida_prevista = partida_chegada_result
-            codigo = codigo_result
-            voo = {
-                'companhia_aerea': request.POST['companhia_aerea'],
-                'codigo': codigo,
-                'origem': request.POST['origem'],
-                'destino': request.POST['destino'],
-                'partida_prevista': partida_prevista,
-                'chegada_prevista': chegada_prevista,
-            }
-            obj = Voos.objects.create(**voo)
+                excs.append(Exception('Preencha com um voo que pertence a esse aeroporto.'))
     
     context = {
         'obj': '' if obj is None else obj,
@@ -254,51 +294,13 @@ def estado(request):
                 context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
             obj = Chegadas.objects.filter(codigo=voo.codigo).update(chegada_real = datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M"))
-        elif request.POST.get("status") == "aterrissado" and voo.destino == "São Paulo":
-            try:    
-                chegada_prevista = voo.chegada_prevista
-                companhia_aerea = voo.companhia_aerea
-                codigo = voo.codigo
-                origem = voo.origem
-
-                chegada = {
-                    'companhia_aerea': companhia_aerea,
-                    'codigo': codigo,
-                    'origem': origem,
-                    'chegada_prevista': chegada_prevista,
-                }
-
-                obj = Chegadas.objects.create(**chegada)
-            except Exception as e:
-                error = e
-                print(error)   
-        elif request.POST.get("partida_real") is not None:
+        elif request.POST.get("partida_real") is not None and voo.origem == "São Paulo":
             utc=pytz.UTC
             if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
             obj = Partidas.objects.filter(codigo=voo.codigo).update(partida_real = datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M"))
         else:
-            if request.POST.get("status") == "embarcando" and voo.origem == "São Paulo":
-                try:
-                    partida_prevista = voo.partida_prevista
-                    companhia_aerea = voo.companhia_aerea
-                    codigo = voo.codigo
-                    destino = voo.destino
-                    status = "embarcando"
-
-                    partida = {
-                        'companhia_aerea': companhia_aerea,
-                        'codigo': codigo,
-                        'destino': destino,
-                        'status': status,
-                        'partida_prevista': partida_prevista,
-                    }
-                    print("passei aqui")
-                    print(partida)
-                    obj = Partidas.objects.create(**partida)
-                except Exception as e:
-                    error = e
             if request.POST.get("status") != "aterrisando":
                     obj = Partidas.objects.filter(codigo=voo.codigo).update(status= request.POST.get("status"))
         for key in request.POST:
