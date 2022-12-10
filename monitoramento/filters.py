@@ -2,12 +2,12 @@ import django_filters
 from .models import Voos, Chegadas, Partidas
 
 
-class VoosFilter(django_filters.FilterSet):  # TODO mudar fields para id?
+class VoosFilter(django_filters.FilterSet):  
     # codigo = django_filters.CharFilter(lookup_expr='iexact')
 
     class Meta:
         model = Voos
-        fields = ['codigo']
+        fields = ['codigo', 'id']
 
 class ChegadasFilter(django_filters.FilterSet):
     # codigo = django_filters.CharFilter(lookup_expr='iexact')
@@ -23,3 +23,9 @@ class PartidasFilter(django_filters.FilterSet):
         model = Partidas
         fields = ['codigo']
     
+class VoosFilterRead(django_filters.FilterSet):  
+    # codigo = django_filters.CharFilter(lookup_expr='iexact')
+
+    class Meta:
+        model = Voos
+        fields = ['codigo', 'id']

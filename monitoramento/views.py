@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos, Partidas, Chegadas
-from .filters import VoosFilter, PartidasFilter, ChegadasFilter
+from .filters import VoosFilter, PartidasFilter, ChegadasFilter, VoosFilterRead
 from .extras import *
 import pytz
 
@@ -137,7 +137,7 @@ def crudcreate(request):
 
 def crudread(request):
     voos_qs = Voos.objects.all()
-    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
+    voos_filter = VoosFilterRead(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     error = False
 
@@ -159,12 +159,12 @@ def crudupdate(request):
     voos_qs = voos_filter.qs
     obj = None
     error = None
-    error_codigo = False
+    error_id = False
     excs = []
-    print(len(voos_qs), request.GET.get('codigo'))
+    # print(len(voos_qs), request.GET.get('codigo'))
 
-    if len(voos_qs) == 0 and request.GET.get('codigo'):
-        error_codigo = True
+    if len(voos_qs) == 0 and request.GET.get('id'):
+        error_id = True
     
     voos_fields = [key.name for key in Voos._meta.fields]
     fields = {}
@@ -179,12 +179,12 @@ def crudupdate(request):
         if fields.get('partida_prevista'):
             partida_prevista = pytz.UTC.localize(datetime.strptime(fields.get('partida_prevista'), '%Y-%m-%dT%H:%M'))
         else:
-            partida_prevista = Voos.objects.get(codigo=request.GET['codigo']).partida_prevista
+            partida_prevista = Voos.objects.get(id=request.GET['id']).partida_prevista
 
         if fields.get('chegada_prevista'):
             chegada_prevista = pytz.UTC.localize(datetime.strptime(fields.get('chegada_prevista'), '%Y-%m-%dT%H:%M'))
         else:
-            chegada_prevista = Voos.objects.get(codigo=request.GET['codigo']).chegada_prevista
+            chegada_prevista = Voos.objects.get(id=request.GET['id']).chegada_prevista
 
         chegada_partida_result = check_chegada_partida(chegada_prevista, partida_prevista, excs)
             
@@ -192,7 +192,7 @@ def crudupdate(request):
             chegada_prevista, partida_prevista = chegada_partida_result
             fields['chegada_prevista'] = chegada_prevista
             fields['partida_prevista'] = partida_prevista
-            obj = Voos.objects.filter(codigo=request.GET['codigo']).update(**fields)
+            obj = Voos.objects.filter(id=request.GET['id']).update(**fields)
                     
     context = {
         'voos_filter': voos_filter,
@@ -200,8 +200,8 @@ def crudupdate(request):
         'obj': obj,
         'error': '' if error is None else error,
         'excs': excs,
-        'error_codigo': error_codigo,
-        'codigo': request.GET.get('codigo')
+        'error_id': error_id,
+        'id': request.GET.get('id')
     }
     return render(request, 'crud-update.html', context)
 
@@ -214,20 +214,24 @@ def cruddelete(request):
     obj = None
     deleted = False
     codigo = None
+    error_id = False
+    
+    id = request.GET.get('id')
+    
+    if len(voos_qs) == 0 and request.GET.get('id'):
+        error_id = True
 
     if request.method == 'POST':
         deleted = True
-        # id = request.POST['id']  # TODO tratar erro de id nao ser numero
-        # obj = Voos.objects.filter(id=id).delete() 
-        codigo = request.POST['codigo']
-        obj = Voos.objects.filter(codigo=codigo).delete()
+        obj = Voos.objects.filter(id=id).delete()
     
     context = {
         'voos_filter': voos_filter,
         'voos_qs': voos_qs,
-        # 'id': id,
+        'error_id': error_id,
         'codigo': codigo,
         'obj': obj,
+        'id': request.GET.get('id'),
         'error': True if deleted and not obj[1] else False,
     }
     return render(request, 'crud-delete.html', context)

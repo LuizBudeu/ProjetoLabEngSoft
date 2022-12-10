@@ -9,14 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deletar um voo</title>
     <link rel="stylesheet" href="{% static 'projeto/home.css'%}" />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <style>
+    <!-- <style>
       #table-wrapper {
         position: relative;
       }
@@ -28,7 +23,7 @@
       #table-wrapper table {
         width: 100%;
       }
-    </style>
+    </style> -->
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -47,21 +42,21 @@
 
     <h1 style="text-align: center">Deletar um Voo</h1>
 
-    <p style="padding-left:5px"><b>Pesquisar</b> voo com código:
+    <!-- <p style="padding-left:5px"><b>Pesquisar</b> voo com código:
       <form style="padding-left:5px" method="get">
         {{ voos_filter.form }}
         <input type="submit" />
       </form>
-    </p>
+    </p> -->
 
-    <p style="padding-left:5px"><b>Deletar</b> voo com código:
-      <form style="padding-left:5px" method="post">
+    <!-- <p style="padding-left:10px"><b>Deletar</b> voo com ID:
+      <form style="padding-left:10px" method="post">
         {% csrf_token %}
         <input
-          name="codigo"
+          name="id"
           type="text"
           class="form-control col-sm-3"
-          placeholder="Código"
+          placeholder="ID"
         /> 
         <button type="submit" class="btn btn-secondary">Deletar</button>
       </form>
@@ -75,9 +70,9 @@
     <div class="alert alert-danger" role="alert">
       Não foi possível encontrar voo com código <b>{{codigo}}</b>
     </div>
-    {% endif %}
+    {% endif %} -->
 
-    <div id="table-wrapper">
+    <!-- <div id="table-wrapper">
       <div id="table-scroll">
         <table class="table">
           <thead class="thead-dark">
@@ -112,6 +107,86 @@
           </tbody>
         </table>
       </div>
+    </div> -->
+
+    <p style="padding-left:10px"><b>Selecionar</b> voo com ID: (É necessário selecionar um ID para deletar)</p>
+    <form method="get">
+      <div class="form-group col-md-1">
+        {% render_field voos_filter.form.id class="form-control" %}
+        <!-- <br/> -->
+        <button class="btn btn-primary" type="submit">
+          Enter
+        </button>
+      </div>
+    </form>
+
+    <div id="table-wrapper">
+      <div id="table-scroll">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th>Id</th>
+              <th>Companhia Aérea</th>
+              <th>Código</th>
+              <th>Status</th>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Partida Prevista</th>
+              <th>Chegada Prevista</th>
+              <th>Partida Real</th>
+              <th>Chegada Real</th>
+            </tr>
+          </thead>
+          {% if id %}
+            <tbody>
+              {% for voo in voos_qs %}
+                <tr>
+                  <th>{{voo.id}}</th>
+                  <th>{{voo.companhia_aerea}}</th>
+                  <th>{{voo.codigo}}</th>
+                  <th>{{voo.status}}</th>
+                  <th>{{voo.origem}}</th>
+                  <th>{{voo.destino}}</th>
+                  <th>{{voo.partida_prevista|date:"H:i d/m/Y"}}</th>
+                  <th>{{voo.chegada_prevista|date:"H:i d/m/Y"}}</th>
+                  <th>{{voo.partida_real|date:"H:i d/m/Y"}}</th>
+                  <th>{{voo.chegada_real|date:"H:i d/m/Y"}}</th>
+                </tr>
+              {% endfor %}
+            </tbody>
+          {% endif %}
+        </table>
+      </div>
     </div>
+    {% if not id %}
+      <div style="text-align:center" class="alert alert-info" role="alert">
+        Selecione um voo</b>
+      </div>
+    {% endif %}
+
+    {% if error_id %}
+      <div style="text-align:center" class="alert alert-danger" role="alert">
+        Não foi possível encontrar voo com ID <b>{{id}}</b>
+      </div>
+    {% endif %}
+
+    {% if not error_id and id %}
+    <p style="padding-left:10px"><b>Deletar</b> voo com ID {{id}}?
+      <form style="padding-left:10px" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">Deletar</button>
+      </form>
+    </p>
+    {% endif %}
+
+    {% if obj.1 %}
+    <div class="alert alert-success" role="alert">
+      Voo com ID <b>{{id}}</b> deletado com sucesso
+    </div>
+    {% endif %} {% if error %}
+    <div class="alert alert-danger" role="alert">
+      Não foi possível encontrar voo com ID <b>{{id}}</b>
+    </div>
+    {% endif %}
   </body>
 </html>

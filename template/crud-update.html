@@ -31,40 +31,35 @@
     <h1 style="text-align: center">Atualizar dados de um Voo</h1>
 
     <div>
-      <p style="padding-left:5px"><b>Selecionar</b> voo com código: (É necessário selecionar um código para atualizar)</p>
+      <p style="padding-left:10px"><b>Selecionar</b> voo com ID: (É necessário selecionar um ID para atualizar)</p>
       <form method="get">
         <div class="form-group col-md-1">
-          {% render_field voos_filter.form.codigo class="form-control" %}
-          <br/>
+          {% render_field voos_filter.form.id class="form-control" %}
+          <!-- <br/> -->
           <button class="btn btn-primary" type="submit">
             Enter
           </button>
       </form>
       </div>
 
-      {% if error_codigo %}
-      <div class="alert alert-danger" role="alert">
-        Não foi possível encontrar voo com código <b>{{codigo}}</b>
-      </div>
-    {% endif %}
-
-      <div id="table-wrapper">
-        <div id="table-scroll">
-          <table class="table">
-            <thead class="thead-dark">
-              <tr>
-                <th>Id</th>
-                <th>Companhia Aérea</th>
-                <th>Código</th>
-                <th>Status</th>
-                <th>Origem</th>
-                <th>Destino</th>
-                <th>Partida Prevista</th>
-                <th>Chegada Prevista</th>
-                <th>Partida Real</th>
-                <th>Chegada Real</th>
-              </tr>
-            </thead>
+    <div id="table-wrapper">
+      <div id="table-scroll">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th>Id</th>
+              <th>Companhia Aérea</th>
+              <th>Código</th>
+              <th>Status</th>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Partida Prevista</th>
+              <th>Chegada Prevista</th>
+              <th>Partida Real</th>
+              <th>Chegada Real</th>
+            </tr>
+          </thead>
+          {% if id %}
             <tbody>
               {% for voo in voos_qs %}
                 <tr>
@@ -81,11 +76,24 @@
                 </tr>
               {% endfor %}
             </tbody>
-          </table>
-        </div>
+          {% endif %}
+        </table>
       </div>
-      </a>
     </div>
+    {% if not id %}
+      <div style="text-align:center" class="alert alert-info" role="alert">
+        Selecione um voo</b>
+      </div>
+    {% endif %}
+      
+
+    {% if error_id %}
+      <div style="text-align:center" class="alert alert-danger" role="alert">
+        Não foi possível encontrar voo com ID <b>{{id}}</b>
+      </div>
+    {% endif %}
+
+    <p style="padding-left:10px"><b>Campos a serem atualizados:</b></p>
 
     <form method="POST">
       <div class="form-group col-md-3">
