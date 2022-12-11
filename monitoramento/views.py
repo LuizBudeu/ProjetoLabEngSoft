@@ -16,15 +16,23 @@ def login(request):
     context = {}
     logins = {
         'gerente' : {
-            'password': 'gerente',
+            'password': '1234',
             'permission': 'relatorio'
         },
         'funcionario' : {
-            'password': 'funcionario',
+            'password': '1234',
             'permission': 'monitoramento'
         },
-        'operadorvoo' : {
-            'password': 'operadorvoo',
+        'piloto' : {
+            'password': '1234',
+            'permission': 'monitoramento'
+        },
+        'torre' : {
+            'password': '1234',
+            'permission': 'monitoramento'
+        },
+        'operador' : {
+            'password': '1234',
             'permission': 'crud'
         },
         'admin': {
