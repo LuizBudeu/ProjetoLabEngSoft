@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos
-from .filters import VoosFilter, VoosFilterRead
+from .filters import VoosFilter, VoosFilterRead, VoosFilterMonitoramento
 from .extras import *
 import pytz
 
@@ -233,7 +233,7 @@ def cruddelete(request):
 
 def monitoramento(request):
     voos_qs = Voos.objects.all()
-    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
+    voos_filter = VoosFilterMonitoramento(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     obj = None
     error = None
