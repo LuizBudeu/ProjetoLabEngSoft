@@ -338,8 +338,8 @@ def mostrarelatoriogeral(request):
     end_date = datetime.strptime(request.session.get("end-date"), "%Y-%m-%d")
 
     voos_filtered = Voos.objects.filter(partida_prevista__gte=initial_date, partida_prevista__lte=end_date)
-    n_partidas = len(Partidas.objects.filter(partida_real__gte=initial_date, partida_real__lte=end_date))
-    n_chegadas = len(Chegadas.objects.filter(chegada_real__gte=initial_date, chegada_real__lte=end_date))
+    n_partidas = len(Voos.objects.filter(partida_real__gte=initial_date, partida_real__lte=end_date, origem="São Paulo"))
+    n_chegadas = len(Voos.objects.filter(chegada_real__gte=initial_date, chegada_real__lte=end_date, destino="São Paulo"))
 
     voos_cancelados = voos_filtered.filter(status="cancelado")
     n_cancelados = len(voos_cancelados)
