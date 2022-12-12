@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from .models import Voos
-from .filters import VoosFilter, VoosFilterRead, VoosFilterMonitoramento
+from .filters import VoosFilter, VoosFilterRead, VoosFilterMonitoramento, VoosFilterEstado
 from .extras import *
 import pytz
 
@@ -271,7 +271,7 @@ def relatorio(request):
 
 def estado(request):
     voos_qs = Voos.objects.all()
-    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
+    voos_filter = VoosFilterEstado(request.GET, queryset=voos_qs)
     voos_qs = voos_filter.qs
     obj = None
     error = None
