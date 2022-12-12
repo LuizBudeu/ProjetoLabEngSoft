@@ -102,10 +102,6 @@ def crudcreate(request):
                             'chegada_prevista': chegada_prevista,
                         } 
                         obj = Voos.objects.create(**voo)
-                        chegada = {
-                            'voo': obj,
-                        }
-                        obj = Chegadas.objects.create(**chegada)
                         
                     except Exception as e:
                         error = e
@@ -121,11 +117,6 @@ def crudcreate(request):
                             'chegada_prevista': chegada_prevista,
                         }
                         obj = Voos.objects.create(**voo)
-                        partida = {
-                            'voo': obj,
-                        }
-                        obj = Partidas.objects.create(**partida)
-                        
                     except Exception as e:
                         error = e
         else:
