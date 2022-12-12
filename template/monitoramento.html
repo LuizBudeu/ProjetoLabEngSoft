@@ -95,7 +95,7 @@
               </thead>
               <tbody>
                 {% for voo in voos_qs %}
-                  {% if voo.destino == "São Paulo" %}
+                  {% if voo.origem == "São Paulo" %}
                   <tr>
                     <th>{{voo.companhia_aerea}}</th>
                     <th>{{voo.codigo}}</th>
