@@ -41,7 +41,7 @@
     <h3>Chegadas</h3>
     <div>
       <form method="get">
-        {{ chegadas_filter.form }}
+        {{ voos_filter.form }}
         <input type="submit" value="Pesquisar"/>
       </form>
 
@@ -58,14 +58,16 @@
               </tr>
             </thead>
             <tbody>
-              {% for chegada in chegadas_qs %}
+              {% for voo in voos_qs %}
+                {% if voo.destino == "São Paulo" %}
                 <tr>                  
-                  <th>{{chegada.companhia_aerea}}</th>
-                  <th>{{chegada.codigo}}</th>
-                  <th>{{chegada.status}}</th>
-                  <th>{{chegada.chegada_prevista}}</th>
-                  <th>{{chegada.chegada_real}}</th>
+                  <th>{{voo.companhia_aerea}}</th>
+                  <th>{{voo.codigo}}</th>
+                  <th>{{voo.status}}</th>
+                  <th>{{voo.chegada_prevista}}</th>
+                  <th>{{voo.chegada_real}}</th>
                 </tr>
+                {% endif %}
               {% endfor %}
             </tbody>
           </table>
@@ -74,7 +76,7 @@
       <h3>Partidas</h3>
       <div>
         <form method="get">
-          {{ partidas_filter.form.as_p }}
+          {{ voos_filter.form }}
           <input type="submit" value="Pesquisar"/>
         </form>
   
@@ -92,15 +94,17 @@
                 </tr>
               </thead>
               <tbody>
-                {% for partida in partidas_qs %}
+                {% for voo in voos_qs %}
+                  {% if voo.destino == "São Paulo" %}
                   <tr>
-                    <th>{{partida.companhia_aerea}}</th>
-                    <th>{{partida.codigo}}</th>
-                    <th>{{partida.status}}</th>
-                    <th>{{partida.destino}}</th>
-                    <th>{{partida.partida_prevista}}</th>
-                    <th>{{partida.partida_real}}</th>
+                    <th>{{voo.companhia_aerea}}</th>
+                    <th>{{voo.codigo}}</th>
+                    <th>{{voo.status}}</th>
+                    <th>{{voo.destino}}</th>
+                    <th>{{voo.partida_prevista}}</th>
+                    <th>{{voo.partida_real}}</th>
                   </tr>
+                  {% endif %}
                 {% endfor %}
               </tbody>
             </table>

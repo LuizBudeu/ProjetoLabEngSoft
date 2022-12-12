@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
-from .models import Voos, Partidas, Chegadas
-from .filters import VoosFilter, PartidasFilter, ChegadasFilter, VoosFilterRead
+from .models import Voos
+from .filters import VoosFilter, VoosFilterRead
 from .extras import *
 import pytz
 
@@ -91,15 +91,7 @@ def crudcreate(request):
                 status = 'em voo'
                 companhia_aerea = request.POST['companhia_aerea']
                 if request.POST['destino'] == "São Paulo":
-                    try:    
-                        chegada = {
-                            'companhia_aerea': companhia_aerea,
-                            'codigo': codigo,
-                            'status': status,
-                            'origem': origem,
-                            'chegada_prevista': chegada_prevista,
-                        }
-                        obj = Chegadas.objects.create(**chegada)
+                    try:   
                         voo = {
                             'companhia_aerea': companhia_aerea,
                             'codigo': codigo,
@@ -108,19 +100,18 @@ def crudcreate(request):
                             'destino': destino,
                             'partida_prevista': partida_prevista,
                             'chegada_prevista': chegada_prevista,
+                        } 
+                        obj = Voos.objects.create(**voo)
+                        chegada = {
+                            'voo': obj,
                         }
+                        obj = Chegadas.objects.create(**chegada)
+                        
                     except Exception as e:
                         error = e
                         print(error) 
                 else:
                     try:
-                        partida = {
-                            'companhia_aerea': companhia_aerea,
-                            'codigo': codigo,
-                            'destino': destino,
-                            'partida_prevista': partida_prevista,
-                        }
-                        obj = Partidas.objects.create(**partida)
                         voo = {
                             'companhia_aerea': companhia_aerea,
                             'codigo': codigo,
@@ -129,9 +120,14 @@ def crudcreate(request):
                             'partida_prevista': partida_prevista,
                             'chegada_prevista': chegada_prevista,
                         }
+                        obj = Voos.objects.create(**voo)
+                        partida = {
+                            'voo': obj,
+                        }
+                        obj = Partidas.objects.create(**partida)
+                        
                     except Exception as e:
                         error = e
-                obj = Voos.objects.create(**voo)
         else:
                 excs.append(Exception('Preencha com um voo que pertence a esse aeroporto.'))
     
@@ -169,7 +165,6 @@ def crudupdate(request):
     error = None
     error_id = False
     excs = []
-    # print(len(voos_qs), request.GET.get('codigo'))
 
     if len(voos_qs) == 0 and request.GET.get('id'):
         error_id = True
@@ -246,17 +241,16 @@ def cruddelete(request):
 
 
 def monitoramento(request):
-    chegadas_qs = Chegadas.objects.all()
-    chegadas_filter = ChegadasFilter(request.GET, queryset=chegadas_qs)
-    chegadas_qs = chegadas_filter.qs
-    partidas_qs = Partidas.objects.all()
-    partidas_filter = PartidasFilter(request.GET, queryset=partidas_qs)
-    partidas_qs = partidas_filter.qs
+    voos_qs = Voos.objects.all()
+    voos_filter = VoosFilter(request.GET, queryset=voos_qs)
+    voos_qs = voos_filter.qs
+    obj = None
+    error = None
     context = {
-        'chegadas_filter': chegadas_filter,
-        'chegadas_qs': chegadas_qs,
-        'partidas_filter': partidas_filter,
-        'partidas_qs': partidas_qs,
+        'voos_filter': voos_filter,
+        'voos_qs': voos_qs,
+        'obj': obj,
+        'error': '' if error is None else error,
     }
     return render(request, 'monitoramento.html', context)
 
@@ -305,25 +299,17 @@ def estado(request):
             if voo.chegada_prevista >  utc.localize(datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
-            obj = Chegadas.objects.filter(codigo=voo.codigo).update(chegada_real = datetime.strptime(request.POST["chegada_real"], "%Y-%m-%dT%H:%M"))
         elif request.POST.get("partida_real") is not None and voo.origem == "São Paulo":
             utc=pytz.UTC
             if voo.partida_prevista > utc.localize(datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M")):  # Erro de datas
                 context["error_msg"] = "Insira uma data válida."
                 return render(request, 'estado.html', context)
-            obj = Partidas.objects.filter(codigo=voo.codigo).update(partida_real = datetime.strptime(request.POST["partida_real"], "%Y-%m-%dT%H:%M"))
-        else:
-            if request.POST.get("status") != "aterrissado":
-                obj = Partidas.objects.filter(codigo=voo.codigo).update(status= request.POST.get("status"))
-            else:
-                obj = Chegadas.objects.filter(codigo=voo.codigo).update(status= request.POST.get("status"))
         for key in request.POST:
             if request.POST[key] == '':
                 continue
             if key in voos_fields:
-                print(key)
                 a[key] = request.POST[key]
-        obj = Voos.objects.filter(codigo=voo.codigo).update(**a)
+        obj = Voos.objects.filter(id=voo.id).update(**a)
         
     return render(request, 'estado.html', context)
 

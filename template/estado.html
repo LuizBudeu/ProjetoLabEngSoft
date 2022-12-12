@@ -43,7 +43,9 @@
         {{ voos_filter.form.as_p }}
         <input type="submit" value="Selecionar voo" />
       </form>
-    
+      {% if voos_qs|length == 0 %}
+      <h4 style="color:rgb(255, 0, 0);">Voo Não Encontrado</h4>
+      {% endif %}
       {% if voos_qs|length == 1 %}
       <h4 style="color:rgb(36, 145, 3);">Voo Encontrado</h4>
       {% for voo in voos_qs %}
