@@ -35,7 +35,9 @@ python -m venv env
 ```
 /env/Scripts/Activate.ps1
 ```
+
 5. Vá para a pasta do projeto
+
 ```
 cd ProjetoLabEngSoft
 ```
@@ -58,12 +60,14 @@ python manage.py runserver
 
 9. Para acessar a página principal, utilize um dos seguintes dados de login e senha a seguir. Cada um contém um tipo diferente de autorização para acessar as funcionalidades do Sistema:
 
-| Nome de usuário | Senha       | Acesso                    |
-| --------------- | ----------- | ------------------------- |
-| operadorvoo     | operadorvoo | Controle de Dados de Voos |
-| funcionario     | funcionario | Monitoramento de voos     |
-| gerente         | gerente     | Gerar Relatórios          |
-| admin           | admin       | Acesso geral              |
+| Nome de usuário | Senha | Acesso                    |
+| --------------- | ----- | ------------------------- |
+| operador        | 1234  | Controle de Dados de Voos |
+| funcionario     | 1234  | Monitoramento de voos     |
+| torre           | 1234  | Monitoramento de voos     |
+| piloto          | 1234  | Monitoramento de voos     |
+| gerente         | 1234  | Gerar Relatórios          |
+| admin           | admin | Acesso geral              |
 
 10. Após o login, está a tela "Home", contendo botões que direcionam a diferentes telas da interface do Sistema. Há também o botão "Sair", que retorna o usuário à tela de login.
 
